@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — light, editorial, bone & obsidian with a vermilion pop
+------------------------------------------------------------------- */
+:root {
+  --bone: #f4f4f0;
+  --paper: #f9f9fb;
+  --ink: #111114;
+  --graphite: #5b5b66;
+  --mist: #d9d9d3;
+  --white: #ffffff;
+  --vermilion: #ff4d2d;
+  --cobalt: #0047ff;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bone: var(--bone);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-graphite: var(--graphite);
+  --color-mist: var(--mist);
+  --color-vermilion: var(--vermilion);
+  --color-cobalt: var(--cobalt);
+
+  --font-display: var(--font-nevera), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-sans: var(--font-haas), "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Fluid type scale — headlines scale with the viewport, clamped at both ends */
+  --text-mega: clamp(4.25rem, 17vw, 19rem);
+  --text-mega--line-height: 0.82;
+  --text-giant: clamp(3.25rem, 11vw, 12.5rem);
+  --text-giant--line-height: 0.86;
+  --text-huge: clamp(2.5rem, 7.2vw, 7.75rem);
+  --text-huge--line-height: 0.9;
+  --text-big: clamp(2rem, 4.6vw, 4.75rem);
+  --text-big--line-height: 0.98;
+  --text-statement: clamp(1.75rem, 3.6vw, 3.6rem);
+  --text-statement--line-height: 1.06;
+  --text-lede: clamp(1.125rem, 1.45vw, 1.5rem);
+  --text-lede--line-height: 1.4;
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.2;
+
+  --ease-expo: var(--ease-out-expo);
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------- */
+html {
+  background: var(--bone);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bone);
+  color: var(--graphite);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--vermilion);
+  color: var(--white);
+}
+
+/* Lock scrolling while the preloader owns the screen */
+html.is-loading,
+html.is-loading body {
+  overflow: hidden;
+}
+
+/* Returning visitors in the same session skip the preloader entirely (set pre-hydration) */
+html[data-intro="done"] [data-preloader] {
+  display: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vermilion);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Texture — micro-grain + architectural grid
+------------------------------------------------------------------- */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 1.2s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+.arch-grid {
+  background-image: linear-gradient(
+    to right,
+    rgb(17 17 20 / 0.055) 1px,
+    transparent 1px
+  );
+  background-size: calc(100% / 6) 100%;
+}
+
+@media (min-width: 768px) {
+  .arch-grid {
+    background-size: calc(100% / 12) 100%;
+  }
+}
+
+.dot-field {
+  background-image: radial-gradient(rgb(17 17 20 / 0.16) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Outline display type for ambient watermarks */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(17 17 20 / 0.16);
+}
+
+/* ------------------------------------------------------------------
+   Motion utilities
+------------------------------------------------------------------- */
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: pulse-ring 1.8s var(--ease-out-expo) infinite;
+}
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+.page-enter {
+  animation: page-enter 0.9s var(--ease-out-expo) both;
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-out-expo);
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+  background-position: 0% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .pulse-dot::after,
+  .page-enter {
+    animation: none;
+  }
+}
