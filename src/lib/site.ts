@@ -4,30 +4,44 @@
  */
 
 export const site = {
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://hamzadaniyal.dev",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://hamzadaniyal.com",
   name: "Mian Muhammad Hamza Daniyal",
   shortName: "Hamza Daniyal",
   role: "Senior Full-Stack Developer & Creative Technologist",
   tagline:
     "Senior full-stack developer and creative technologist engineering high-performance web platforms, headless commerce and real-time WebGL experiences.",
-  // TODO: replace with the real inbox and profiles before going live.
-  email: "hello@hamzadaniyal.dev",
+  // TODO: replace LinkedIn with the real profile before going live.
+  email: "contact@hamzadaniyal.com",
   location: "Pakistan",
-  timezone: "Asia/Karachi",
-  timezoneLabel: "PKT / UTC+5",
   since: 2018,
   socials: [
-    { label: "GitHub", handle: "@hamzadaniyal", href: "https://github.com/hamzadaniyal" },
+    { label: "GitHub", handle: "MIAN-SAHAB", href: "https://github.com/MIAN-SAHAB" },
     { label: "LinkedIn", handle: "in/hamzadaniyal", href: "https://www.linkedin.com/in/hamzadaniyal" },
-    { label: "X / Twitter", handle: "@hamzadaniyal", href: "https://x.com/hamzadaniyal" },
-    { label: "Dribbble", handle: "hamzadaniyal", href: "https://dribbble.com/hamzadaniyal" },
+    { label: "Twitch", handle: "tommyvercetti__455", href: "https://www.twitch.tv/tommyvercetti__455" },
+    { label: "Discord", handle: "Add me", href: "https://discord.com/users/802958353298227240" },
+    { label: "Steam", handle: "IamTommyVercetti", href: "https://steamcommunity.com/id/IamTommyVercetti/" },
   ],
 } as const;
 
+/**
+ * Games for the /gaming library that Steam can't report on its own — titles
+ * played before the account existed, or ones you want listed regardless.
+ * Use the Steam store app id (store.steampowered.com/app/<id>/). Hours are optional.
+ * With STEAM_API_KEY set, every played game on the account is added automatically.
+ */
+export const playedGames: { appid: number; name: string; hours?: number }[] = [];
+
+export const steamProfile = {
+  vanity: "IamTommyVercetti",
+  url: "https://steamcommunity.com/id/IamTommyVercetti/",
+} as const;
+
 export const nav = [
-  { label: "Work", href: "/#work" },
-  { label: "About", href: "/about" },
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
+  { label: "Gaming", href: "/gaming" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -60,7 +74,7 @@ export type Project = {
   stack: string[];
   image: string;
   imageAlt: string;
-  accent: "vermilion" | "cobalt" | "ink";
+  accent: "accent" | "aqua" | "ink";
 };
 
 export const projects: Project[] = [
@@ -75,7 +89,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "GSAP", "Headless CMS"],
     image: unsplash("photo-1547658719-da2b51169166"),
     imageAlt: "Desktop monitor and tablet displaying responsive interface layouts",
-    accent: "vermilion",
+    accent: "accent",
   },
   {
     slug: "beba-yerba",
@@ -88,7 +102,7 @@ export const projects: Project[] = [
     stack: ["Shopify Storefront API", "Next.js", "Tailwind CSS", "Maps API"],
     image: unsplash("photo-1556679343-c7306c1976bc"),
     imageAlt: "Iced yerba mate drink with lime on a dark surface",
-    accent: "cobalt",
+    accent: "aqua",
   },
   {
     slug: "3d-configurators",
@@ -114,7 +128,7 @@ export const projects: Project[] = [
     stack: ["Laravel", "PHP", "MySQL", "GSAP"],
     image: unsplash("photo-1487958449943-2429e8be8625"),
     imageAlt: "White angular modern architecture against a pale sky",
-    accent: "vermilion",
+    accent: "accent",
   },
   {
     slug: "gophygital",
@@ -127,7 +141,7 @@ export const projects: Project[] = [
     stack: ["React", "Next.js", "Laravel", "REST APIs"],
     image: unsplash("photo-1559028012-481c04fa702d"),
     imageAlt: "Design workstation showing interface mockups on a large display",
-    accent: "cobalt",
+    accent: "aqua",
   },
 ];
 

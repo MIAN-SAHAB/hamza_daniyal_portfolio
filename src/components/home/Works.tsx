@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "@/components/AppLink";
 import { useRef } from "react";
 import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import { projects, type Project } from "@/lib/site";
+import { BrowserWindow } from "@/components/draw/art";
 
 const ACCENT: Record<Project["accent"], string> = {
-  vermilion: "bg-vermilion text-white",
-  cobalt: "bg-cobalt text-white",
+  accent: "bg-accent text-white",
+  aqua: "bg-aqua text-white",
   ink: "bg-ink text-white",
 };
 
@@ -81,17 +83,17 @@ export default function Works() {
       id="work"
       ref={root}
       aria-labelledby="work-title"
-      className="relative min-h-[350vh] scroll-mt-0 bg-paper"
+      className="relative min-h-[350vh] bg-sky"
     >
       {/* diagonal entry edge */}
-      <div aria-hidden className="absolute inset-x-0 -top-[8vw] h-[8vw] bg-paper [clip-path:polygon(0_100%,100%_0,100%_100%)]" />
+      <div aria-hidden className="absolute inset-x-0 -top-[8vw] h-[8vw] bg-sky [clip-path:polygon(0_100%,100%_0,100%_100%)]" />
 
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* HUD */}
         <div className="pointer-events-none absolute inset-x-4 top-24 z-20 flex items-center gap-4 text-micro uppercase tracking-[0.2em] md:inset-x-10 md:top-28">
-          <span className="text-vermilion">(02) — Selected Works</span>
+          <span className="rounded-full bg-lime px-3 py-1.5 text-ink">02 — Selected Works</span>
           <span className="relative h-px flex-1 bg-ink/10">
-            <span data-progress className="absolute inset-0 origin-left bg-ink" />
+            <span data-progress className="absolute inset-0 origin-left bg-gradient-to-r from-accent to-aqua" />
           </span>
           <span className="tabular-nums text-ink">
             <span data-current>01</span> / {String(projects.length).padStart(2, "0")}
@@ -107,7 +109,7 @@ export default function Works() {
               </span>
               <span className="block overflow-hidden md:pl-[8vw]">
                 <span data-intro-word className="block">
-                  Works<span className="text-vermilion">*</span>
+                  <span className="text-gradient">Works</span>
                 </span>
               </span>
             </h2>
@@ -116,6 +118,13 @@ export default function Works() {
               file, none from a template.
             </p>
             <p className="mt-6 text-micro uppercase tracking-[0.2em] md:ml-[8vw]">Keep scrolling →</p>
+            <BrowserWindow
+              trigger="#work"
+              start="top 70%"
+              end="top top"
+              strokeWidth={2.5}
+              className="pointer-events-none absolute bottom-[10%] right-[4%] hidden w-[16vw] rotate-6 text-accent md:block"
+            />
           </div>
 
           {projects.map((p, i) => {
@@ -136,7 +145,7 @@ export default function Works() {
                   {p.index}
                 </span>
 
-                <div data-media className={`relative aspect-[4/3] w-full overflow-hidden bg-mist md:absolute ${L.media}`}>
+                <div data-media className={`relative aspect-[4/3] w-full overflow-hidden rounded-[1.75rem] bg-mist shadow-[0_50px_90px_-50px_rgba(27,20,70,0.6)] md:absolute ${L.media}`}>
                   <Image
                     data-media-img
                     src={p.image}
@@ -171,8 +180,21 @@ export default function Works() {
             );
           })}
 
-          <div className="flex h-full w-[40vw] shrink-0 items-center justify-center md:w-[24vw]" aria-hidden>
-            <span className="font-display text-big uppercase text-ink/20">Fin.</span>
+          <div className="flex h-full w-[80vw] shrink-0 items-center justify-center px-6 md:w-[40vw]">
+            <Link
+              href="/work"
+              className="group relative flex aspect-square w-[min(70vw,24rem)] flex-col items-center justify-center rounded-full bg-gradient-to-br from-accent to-aqua text-center text-white shadow-[0_50px_100px_-40px_rgba(122,60,255,0.8)] transition-transform duration-700 ease-expo hover:scale-105"
+            >
+              <span className="text-micro uppercase tracking-[0.2em] text-white/80">Full case studies</span>
+              <span className="mt-3 font-display text-[clamp(2rem,4vw,3.5rem)] uppercase leading-[0.9]">
+                See all
+                <br />
+                the work
+              </span>
+              <span className="mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-lime text-xl text-ink transition-transform duration-500 group-hover:-rotate-45">
+                →
+              </span>
+            </Link>
           </div>
         </div>
       </div>

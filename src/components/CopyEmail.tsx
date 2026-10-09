@@ -37,14 +37,13 @@ export default function CopyEmail({ className = "" }: { className?: string }) {
       ref={root}
       type="button"
       onClick={copy}
-      data-cursor="Copy"
       aria-label={`Copy email address ${site.email}`}
       className={`group relative inline-flex items-center gap-3 text-left ${className}`}
     >
       <span className="relative block h-[1.3em] overflow-hidden">
         <span data-roll className="block">
           <span className="block h-[1.3em] link-underline">{site.email}</span>
-          <span className="block h-[1.3em] text-vermilion">Copied to clipboard ✓</span>
+          <span className="block h-[1.3em] text-accent">Copied to clipboard ✓</span>
         </span>
       </span>
       <span

@@ -1,38 +1,213 @@
 "use client";
 
-import Link from "next/link";
-import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import Link from "@/components/AppLink";
+import { useEffect, useRef, useState, type ComponentType } from "react";
+import { gsap, ScrollTrigger, SCRUB, useGSAP } from "@/lib/gsap";
 import { metrics } from "@/lib/site";
+import { Bolt, BrowserWindow, Orbits, Sparkle } from "@/components/draw/art";
 
-const OFFSETS = ["md:ml-0", "md:ml-[38vw]", "md:ml-[12vw]", "md:ml-[52vw]"];
+type IconProps = { mode?: "scroll" | "intro"; duration?: number; strokeWidth?: number; className?: string };
+const ICONS: ComponentType<IconProps>[] = [Bolt, BrowserWindow, Orbits, Sparkle];
+const TONES = ["from-accent to-aqua", "from-aqua to-lime", "from-pink to-accent", "from-lime to-aqua"];
 
-export default function Impact() {
-  const metricsRef = useRef<HTMLElement>(null);
-  const ctaRef = useRef<HTMLElement>(null);
+/**
+ * Impact console: a sticky stage where scrolling steps through each metric.
+ * The ring tracks overall progress, the number rolls to the active value and
+ * its icon redraws. Click a metric to jump to it; the dial tilts toward the pointer.
+ */
+function ImpactConsole() {
+  const root = useRef<HTMLElement>(null);
+  const trigger = useRef<ScrollTrigger | null>(null);
+  const [active, setActive] = useState(0);
+  const m = metrics[active];
+  const Icon = ICONS[active % ICONS.length];
 
-  // Metrics: numbers count up, scrubbed to each row's passage through the viewport.
   useGSAP(
     () => {
-      gsap.utils.toArray<HTMLElement>("[data-metric]").forEach((row) => {
-        const num = row.querySelector<HTMLElement>("[data-value]")!;
-        const target = Number(num.dataset.value);
-        const obj = { v: 0 };
-        const st = { trigger: row, start: "top 90%", end: "top 40%", scrub: SCRUB };
-        gsap.to(obj, {
-          v: target,
-          ease: "none",
-          scrollTrigger: st,
-          onUpdate: () => void (num.textContent = String(Math.round(obj.v)).padStart(2, "0")),
-        });
-        gsap.fromTo(row.querySelector("[data-rule]"), { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: st });
-        gsap.fromTo(row.querySelector("[data-meta]"), { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, ease: "none", scrollTrigger: st });
+      const q = gsap.utils.selector(root);
+      const ring = q("[data-ring-arc]")[0] as unknown as SVGCircleElement;
+      const len = ring.getTotalLength();
+      gsap.set(ring, { strokeDasharray: len, strokeDashoffset: len });
+
+      trigger.current = ScrollTrigger.create({
+        trigger: root.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: SCRUB,
+        animation: gsap
+          .timeline({ defaults: { ease: "none" } })
+          .to(ring, { strokeDashoffset: 0, duration: 1 }, 0)
+          .to(q("[data-orbit-bg]"), { rotate: 120, duration: 1 }, 0),
+        onUpdate: (self) => {
+          const i = Math.min(metrics.length - 1, Math.floor(self.progress * metrics.length));
+          setActive((prev) => (prev === i ? prev : i));
+          q("[data-dwell]").forEach((bar, j) => {
+            const local = gsap.utils.clamp(0, 1, self.progress * metrics.length - j);
+            (bar as HTMLElement).style.transform = `scaleX(${local})`;
+          });
+        },
       });
     },
-    { scope: metricsRef },
+    { scope: root },
   );
 
-  // Kinetic CTA: tall parent + sticky viewport, a vermilion portal opens as you scroll.
+  // Roll the number whenever the active metric changes.
+  useGSAP(
+    () => {
+      const el = root.current!.querySelector<HTMLElement>("[data-number]")!;
+      const from = Number(el.dataset.current ?? 0);
+      const obj = { v: from };
+      gsap.to(obj, {
+        v: m.value,
+        duration: 0.9,
+        ease: "expo.out",
+        onUpdate: () => {
+          el.textContent = String(Math.round(obj.v)).padStart(2, "0");
+          el.dataset.current = String(Math.round(obj.v));
+        },
+      });
+      gsap.fromTo("[data-swap]", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "expo.out", stagger: 0.05 });
+    },
+    { scope: root, dependencies: [active] },
+  );
+
+  // Pointer tilt on the dial.
+  useEffect(() => {
+    const dial = root.current?.querySelector<HTMLElement>("[data-dial]");
+    if (!dial || !window.matchMedia("(pointer: fine)").matches) return;
+    const rx = gsap.quickTo(dial, "rotateX", { duration: 0.6, ease: "power3" });
+    const ry = gsap.quickTo(dial, "rotateY", { duration: 0.6, ease: "power3" });
+    const onMove = (e: PointerEvent) => {
+      const r = dial.getBoundingClientRect();
+      ry(((e.clientX - r.left) / r.width - 0.5) * 16);
+      rx(-((e.clientY - r.top) / r.height - 0.5) * 16);
+    };
+    const reset = () => {
+      rx(0);
+      ry(0);
+    };
+    const stage = dial.parentElement!;
+    stage.addEventListener("pointermove", onMove);
+    stage.addEventListener("pointerleave", reset);
+    return () => {
+      stage.removeEventListener("pointermove", onMove);
+      stage.removeEventListener("pointerleave", reset);
+    };
+  }, []);
+
+  const jump = (i: number) => {
+    const st = trigger.current;
+    if (!st) return;
+    const y = st.start + ((i + 0.5) / metrics.length) * (st.end - st.start);
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  return (
+    <section ref={root} aria-labelledby="impact-title" className="relative bg-paper" style={{ minHeight: `${100 + metrics.length * 70}vh` }}>
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden px-4 md:px-10">
+        <Orbits strokeWidth={1.2} start="top 90%" end="top 20%" className="pointer-events-none absolute -left-[10vw] bottom-[-14vw] w-[44vw] text-accent/20" />
+
+        <div className="relative grid w-full items-center gap-8 md:grid-cols-12 md:gap-10">
+          {/* metric selector */}
+          <div className="order-2 md:order-1 md:col-span-5">
+            <div>
+              <p className="inline-block rounded-full bg-lime px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-ink">04 — Impact</p>
+              <h2 id="impact-title" className="mt-4 font-display text-[clamp(2rem,4.2vw,4.25rem)] uppercase leading-[0.9] text-ink">
+                Numbers I&rsquo;m <span className="text-gradient">willing to sign</span>
+              </h2>
+            </div>
+
+            <ol className="mt-6 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-1 md:gap-0 md:border-t md:border-ink/10">
+              {metrics.map((x, i) => (
+                <li key={x.label} className="md:border-b md:border-ink/10">
+                  <button
+                    type="button"
+                    onClick={() => jump(i)}
+                    aria-current={active === i ? "step" : undefined}
+                    className={`group relative flex w-full items-center gap-4 overflow-hidden rounded-2xl px-3 py-3 text-left transition-colors duration-500 md:rounded-none md:px-2 md:py-5 ${
+                      active === i ? "bg-white md:bg-transparent" : "bg-white/50 md:bg-transparent"
+                    }`}
+                  >
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-sm transition-colors duration-500 ${
+                        active === i ? "bg-ink text-lime" : "bg-ink/5 text-graphite"
+                      }`}
+                    >
+                      0{i + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className={`block truncate font-medium transition-colors ${active === i ? "text-ink" : "text-graphite"}`}>{x.label}</span>
+                      <span className="hidden text-micro uppercase tracking-[0.16em] text-graphite/80 md:block">{x.note}</span>
+                    </span>
+                    <span
+                      data-dwell
+                      aria-hidden
+                      style={{ transform: "scaleX(0)" }}
+                      className="absolute bottom-0 left-0 h-[3px] w-full origin-left bg-gradient-to-r from-accent to-aqua"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* the dial */}
+          <div className="order-1 flex justify-center [perspective:1000px] md:order-2 md:col-span-7">
+            <div data-dial className="relative aspect-square w-[min(72vw,30rem)] [transform-style:preserve-3d] md:w-[min(42vw,34rem)]">
+              <svg data-orbit-bg aria-hidden viewBox="0 0 200 200" className="absolute inset-[-10%] h-[120%] w-[120%] text-accent/15">
+                <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" strokeDasharray="2 6" />
+              </svg>
+              <div className={`absolute inset-[12%] rounded-full bg-gradient-to-br ${TONES[active % TONES.length]} opacity-90 blur-[2px] transition-[background] duration-700`} />
+              <div className="absolute inset-[14%] rounded-full bg-paper/85 backdrop-blur-sm" />
+
+              <svg aria-hidden viewBox="0 0 200 200" className="absolute inset-0 h-full w-full -rotate-90">
+                <defs>
+                  <linearGradient id="impact-arc" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#7A3CFF" />
+                    <stop offset="100%" stopColor="#00B8F0" />
+                  </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="92" fill="none" stroke="rgb(27 20 70 / 0.08)" strokeWidth="6" />
+                <circle data-ring-arc cx="100" cy="100" r="92" fill="none" stroke="url(#impact-arc)" strokeWidth="6" strokeLinecap="round" />
+              </svg>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <div key={`icon-${active}`} className="mb-2 w-14 text-accent md:w-16">
+                  <Icon mode="intro" duration={1} strokeWidth={5} className="w-full" />
+                </div>
+                <p
+                  className={`text-gradient font-display leading-[0.85] tabular-nums transition-[font-size] duration-500 ${
+                    String(m.value).length + m.suffix.length > 3 ? "text-[clamp(3rem,7vw,6.5rem)]" : "text-[clamp(4rem,10vw,9rem)]"
+                  }`}
+                >
+                  <span data-number aria-hidden>
+                    00
+                  </span>
+                  <span aria-hidden>{m.suffix}</span>
+                  <span className="sr-only">
+                    {m.value}
+                    {m.suffix}
+                  </span>
+                </p>
+                <p data-swap className="mt-3 max-w-[16rem] px-4 font-medium text-ink">
+                  {m.label}
+                </p>
+                <p data-swap className="mt-1 text-micro uppercase tracking-[0.18em] text-graphite">
+                  {m.note}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Kinetic CTA: tall parent + sticky viewport, a colour portal opens as you scroll. */
+function KineticCta() {
+  const ctaRef = useRef<HTMLElement>(null);
+
   useGSAP(
     () => {
       const q = gsap.utils.selector(ctaRef);
@@ -59,77 +234,48 @@ export default function Impact() {
     ));
 
   return (
+    <section ref={ctaRef} aria-labelledby="cta-title" className="relative min-h-[260vh]">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div aria-hidden className="absolute inset-0 flex select-none flex-col justify-center gap-[2vh] font-display text-[clamp(4rem,15vw,16rem)] uppercase leading-[0.85] text-ink">
+          <div data-row="a" className="w-max whitespace-nowrap">{row("Let's build —")}</div>
+          <div data-row="b" className="w-max whitespace-nowrap">{row("Something —", true)}</div>
+          <div data-row="c" className="text-gradient w-max whitespace-nowrap">{row("Inevitable —")}</div>
+        </div>
+
+        <div
+          data-portal
+          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent via-[#9a5bff] to-aqua text-white [clip-path:circle(7%_at_50%_50%)]"
+        >
+          <span data-portal-arrow aria-hidden className="absolute font-display text-[clamp(2rem,4vw,4rem)]">
+            ↘
+          </span>
+          <div data-portal-inner className="flex flex-col items-center px-4 text-center">
+            <p data-portal-copy className="mb-6 text-micro uppercase tracking-[0.24em]">
+              05 — Now booking select projects
+            </p>
+            <h2 id="cta-title" className="font-display text-giant uppercase">
+              Start a
+              <br />
+              Project
+            </h2>
+            <Link
+              href="/contact"
+              className="mt-10 inline-flex items-center gap-4 rounded-full bg-white px-7 py-4 text-sm uppercase tracking-[0.16em] text-ink transition-transform duration-500 ease-expo hover:scale-105"
+            >
+              Let&rsquo;s talk <span aria-hidden>→</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function Impact() {
+  return (
     <>
-      <section ref={metricsRef} aria-labelledby="impact-title" className="relative overflow-hidden px-4 py-32 md:px-10 md:py-48">
-        <div className="mb-20 flex flex-wrap items-end justify-between gap-6">
-          <p className="text-micro uppercase tracking-[0.2em] text-vermilion">(04) — Impact</p>
-          <h2 id="impact-title" className="max-w-xl text-right font-display text-big uppercase text-ink">
-            Numbers I&rsquo;m willing to sign
-          </h2>
-        </div>
-
-        <ul>
-          {metrics.map((m, i) => (
-            <li key={m.label} data-metric className={`relative mb-14 md:mb-6 ${OFFSETS[i]}`}>
-              <span data-rule aria-hidden className="absolute -top-3 left-0 block h-px w-full origin-left bg-ink/15 md:w-[40vw]" />
-              <div className="flex items-end gap-6">
-                <p className="font-display text-giant leading-[0.8] text-ink tabular-nums">
-                  <span data-value={m.value} aria-hidden>
-                    {String(m.value).padStart(2, "0")}
-                  </span>
-                  <span className="text-vermilion" aria-hidden>
-                    {m.suffix}
-                  </span>
-                  <span className="sr-only">
-                    {m.value}
-                    {m.suffix}
-                  </span>
-                </p>
-                <div data-meta className="pb-2">
-                  <p className="max-w-[14rem] text-ink">{m.label}</p>
-                  <p className="mt-1 text-micro uppercase tracking-[0.18em]">{m.note}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section ref={ctaRef} aria-labelledby="cta-title" className="relative min-h-[260vh]">
-        <div className="sticky top-0 h-screen overflow-hidden">
-          <div aria-hidden className="absolute inset-0 flex select-none flex-col justify-center gap-[2vh] font-display text-[clamp(4rem,15vw,16rem)] uppercase leading-[0.85] text-ink">
-            <div data-row="a" className="w-max whitespace-nowrap">{row("Let's build —")}</div>
-            <div data-row="b" className="w-max whitespace-nowrap">{row("Something —", true)}</div>
-            <div data-row="c" className="w-max whitespace-nowrap">{row("Inevitable —")}</div>
-          </div>
-
-          <div
-            data-portal
-            className="absolute inset-0 flex items-center justify-center bg-vermilion text-white [clip-path:circle(7%_at_50%_50%)]"
-          >
-            <span data-portal-arrow aria-hidden className="absolute font-display text-[clamp(2rem,4vw,4rem)]">
-              ↘
-            </span>
-            <div data-portal-inner className="flex flex-col items-center px-4 text-center">
-              <p data-portal-copy className="mb-6 text-micro uppercase tracking-[0.24em]">
-                (05) — Now booking select projects
-              </p>
-              <h2 id="cta-title" className="font-display text-giant uppercase">
-                Start a
-                <br />
-                Project
-              </h2>
-              <Link
-                href="/contact"
-                data-cursor="Let's talk"
-                className="mt-10 inline-flex items-center gap-4 rounded-full bg-white px-7 py-4 text-sm uppercase tracking-[0.16em] text-ink transition-transform duration-500 ease-expo hover:scale-105"
-              >
-                Let&rsquo;s talk <span aria-hidden>→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ImpactConsole />
+      <KineticCta />
     </>
   );
 }

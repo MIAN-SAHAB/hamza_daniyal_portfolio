@@ -4,7 +4,6 @@ import "./globals.css";
 import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Cursor from "@/components/Cursor";
 import { site } from "@/lib/site";
 import { jsonLd } from "@/lib/seo";
 import { introBootScript } from "@/lib/intro-boot";
@@ -65,7 +64,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F4F4F0",
+  themeColor: "#F7F4FF",
   colorScheme: "light",
 };
 
@@ -84,7 +83,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         {children}
         <Footer />
-        <Cursor />
         <div className="grain" aria-hidden />
       </body>
     </html>

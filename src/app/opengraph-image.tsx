@@ -24,23 +24,23 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "56px 64px",
-          background: "#F4F4F0",
-          color: "#111114",
+          background: "#F7F4FF",
+          color: "#1B1446",
           fontFamily: "Haas",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 20, letterSpacing: 4, color: "#5B5B66" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 20, letterSpacing: 4, color: "#5A5480" }}>
           <span>SENIOR FULL-STACK DEVELOPER & CREATIVE TECHNOLOGIST</span>
-          <span>PKT / UTC+5</span>
+          <span>PAKISTAN</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", fontFamily: "Nevera", fontSize: 168, lineHeight: 0.86 }}>
           <span>HAMZA</span>
           <span style={{ display: "flex", paddingLeft: 220 }}>
-            DANIYAL<span style={{ color: "#FF4D2D" }}>.</span>
+            DANIYAL<span style={{ color: "#7A3CFF" }}>.</span>
           </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 22, color: "#111114" }}>
-          <span style={{ width: 12, height: 12, borderRadius: 12, background: "#FF4D2D" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 22, color: "#1B1446" }}>
+          <span style={{ width: 12, height: 12, borderRadius: 12, background: "#7A3CFF" }} />
           Next.js · Three.js / R3F · GSAP · Laravel · Headless Shopify
         </div>
       </div>

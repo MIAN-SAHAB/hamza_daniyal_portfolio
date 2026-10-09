@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 
@@ -48,7 +48,6 @@ export default function Logo({ className = "" }: { className?: string }) {
       ref={root}
       href="/"
       aria-label="Hamza Daniyal — home"
-      data-cursor="Home"
       onMouseEnter={() => morph("hover")}
       onMouseLeave={() => morph("rest")}
       onFocus={() => morph("hover")}
@@ -78,7 +77,7 @@ export default function Logo({ className = "" }: { className?: string }) {
           strokeLinejoin="miter"
           vectorEffect="non-scaling-stroke"
         />
-        <circle data-dot cx="67" cy="34" r="3" className="fill-vermilion" />
+        <circle data-dot cx="67" cy="34" r="3" className="fill-accent" />
       </svg>
       <span className="hidden flex-col text-micro uppercase leading-tight tracking-[0.18em] sm:flex">
         <span>Hamza</span>

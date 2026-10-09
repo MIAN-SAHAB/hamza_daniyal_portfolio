@@ -4,6 +4,10 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import { services } from "@/lib/site";
+import { Cart, CodeBrackets, Plug, WireCube } from "@/components/draw/art";
+
+const ICONS = [WireCube, CodeBrackets, Cart, Plug];
+const TONES = ["text-accent", "text-aqua", "text-pink", "text-accent"];
 
 /**
  * Editorial service index. Hovering (or focusing) a row expands its detail and
@@ -71,7 +75,7 @@ export default function ServicesList() {
       className="relative overflow-hidden px-4 py-24 md:px-10 md:py-36"
     >
       <div className="mb-14 flex items-end justify-between">
-        <h2 id="services-list-title" className="text-micro uppercase tracking-[0.2em] text-vermilion">
+        <h2 id="services-list-title" className="text-micro uppercase tracking-[0.2em] text-accent">
           (01) — Offerings
         </h2>
         <p className="hidden text-micro uppercase tracking-[0.2em] md:block">Hover to unfold</p>
@@ -81,7 +85,7 @@ export default function ServicesList() {
       <div
         data-preview
         aria-hidden
-        className="pointer-events-none absolute left-0 top-0 z-20 hidden aspect-[4/5] w-[22vw] overflow-hidden bg-mist shadow-[0_40px_80px_-30px_rgba(17,17,20,0.45)] md:block"
+        className="pointer-events-none absolute left-0 top-0 z-20 hidden aspect-[4/5] w-[22vw] overflow-hidden bg-mist shadow-[0_40px_80px_-30px_rgba(27,20,70,0.45)] md:block"
       >
         <div data-preview-strip className="h-full w-full">
           {services.map((s) => (
@@ -95,6 +99,7 @@ export default function ServicesList() {
       <ul className="border-t border-ink/15">
         {services.map((s, i) => {
           const open = active === i;
+          const Icon = ICONS[i % ICONS.length];
           return (
             <li
               key={s.index}
@@ -108,13 +113,12 @@ export default function ServicesList() {
                 aria-expanded={open}
                 aria-controls={`svc-${s.index}`}
                 onClick={() => show(open ? null : i)}
-                data-cursor="Explore"
-                className="flex w-full items-baseline gap-4 py-8 text-left md:gap-10 md:py-10"
+                className="flex w-full items-center gap-4 py-8 text-left md:gap-10 md:py-10"
               >
-                <span className="text-micro tracking-[0.2em] text-vermilion">{s.index}</span>
+                <Icon strokeWidth={5} start="top 90%" end="top 50%" className={`w-12 shrink-0 md:w-16 ${TONES[i % TONES.length]}`} />
                 <span
                   className={`font-display text-huge uppercase leading-[0.9] transition-[color,transform] duration-700 ease-expo ${
-                    open ? "translate-x-4 text-vermilion" : "text-ink"
+                    open ? "translate-x-4 text-accent" : "text-ink"
                   }`}
                 >
                   {s.title}
@@ -131,7 +135,7 @@ export default function ServicesList() {
                     <ul className="space-y-1 text-ink md:col-span-3 md:col-start-7">
                       {s.deliverables.map((d) => (
                         <li key={d} className="flex gap-3">
-                          <span aria-hidden className="text-vermilion">+</span>
+                          <span aria-hidden className="text-accent">+</span>
                           {d}
                         </li>
                       ))}

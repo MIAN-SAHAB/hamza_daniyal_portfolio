@@ -21,7 +21,7 @@ export default function Collage() {
       </h2>
       {FRAMES.map((f) => (
         <Parallax key={f.src} speed={f.speed} className={`absolute ${f.cls}`}>
-          <ClipReveal className="h-full w-full bg-mist" from="bottom">
+          <ClipReveal className="h-full w-full rounded-[1.5rem] bg-mist shadow-[0_40px_80px_-40px_rgba(27,20,70,0.5)]" from="bottom">
             <Image src={f.src} alt={f.alt} fill sizes="(min-width: 768px) 30vw, 50vw" className="object-cover" />
           </ClipReveal>
           <p className="absolute -bottom-6 left-0 whitespace-nowrap text-micro uppercase tracking-[0.18em]">{f.cap}</p>

@@ -29,7 +29,7 @@ export default function RotatingBadge({ text, center, size = 148 }: { text: stri
           <textPath href={`#c-${id}`}>{text}</textPath>
         </text>
       </svg>
-      <span className="absolute inset-[26%] flex items-center justify-center rounded-full bg-vermilion font-display text-2xl text-white">
+      <span className="absolute inset-[26%] flex items-center justify-center rounded-full bg-accent font-display text-2xl text-white">
         {center}
       </span>
     </div>

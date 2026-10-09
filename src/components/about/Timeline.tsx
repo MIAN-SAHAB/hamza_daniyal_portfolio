@@ -38,12 +38,12 @@ export default function Timeline() {
           <h2 id="timeline-title" className="font-display text-big uppercase text-ink">
             Milestones
           </h2>
-          <p className="text-micro uppercase tracking-[0.2em] text-vermilion">2018 → Now</p>
+          <p className="text-micro uppercase tracking-[0.2em] text-accent">2018 → Now</p>
         </div>
 
         {/* the rail */}
-        <div aria-hidden className="absolute inset-x-0 top-1/2 h-px bg-ink/10">
-          <span data-rail className="absolute inset-0 origin-left bg-vermilion" />
+        <div aria-hidden className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-ink/10">
+          <span data-rail className="absolute inset-0 origin-left bg-gradient-to-r from-accent via-aqua to-pink" />
         </div>
 
         <ol data-track className="relative flex h-full w-max items-center pl-[8vw] pr-[30vw]">
@@ -54,7 +54,7 @@ export default function Timeline() {
                 <span
                   data-node
                   aria-hidden
-                  className="absolute left-0 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-vermilion bg-paper"
+                  className="absolute left-0 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent bg-paper"
                 />
                 <div className={`absolute left-0 pr-8 ${above ? "bottom-1/2 pb-8" : "top-1/2 pt-8"}`}>
                   <p data-year className="font-display text-huge leading-none text-ink">

@@ -46,7 +46,7 @@ export default function ScrubWords({ text, as: Tag = "p", className = "", start 
     if (opens) accent = true;
     const word = raw.replace(/\*/g, "");
     nodes.push(
-      <span key={i} data-w className={`inline-block will-change-transform ${accent ? "text-vermilion italic" : ""}`}>
+      <span key={i} data-w className={`inline-block will-change-transform ${accent ? "text-accent italic" : ""}`}>
         {word}
       </span>,
       " ",

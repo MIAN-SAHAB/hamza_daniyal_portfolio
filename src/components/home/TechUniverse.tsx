@@ -6,6 +6,12 @@ import { stackClusters } from "@/lib/site";
 
 const CORE = { x: 50, y: 50 };
 
+const ANCHOR: Record<string, string> = {
+  frontend: "bg-accent shadow-[0_12px_30px_-10px_rgba(122,60,255,0.8)]",
+  backend: "bg-aqua shadow-[0_12px_30px_-10px_rgba(0,184,240,0.8)]",
+  systems: "bg-pink shadow-[0_12px_30px_-10px_rgba(255,79,163,0.8)]",
+};
+
 export default function TechUniverse() {
   const root = useRef<HTMLElement>(null);
 
@@ -50,15 +56,15 @@ export default function TechUniverse() {
 
   return (
     <section ref={root} aria-labelledby="universe-title" className="relative min-h-[320vh]">
-      <div className="dot-field sticky top-0 h-screen overflow-hidden">
+      <div className="bg-aurora sticky top-0 h-screen overflow-hidden">
         {/* copy column */}
         <div className="absolute inset-x-4 top-24 z-10 md:inset-x-auto md:bottom-14 md:left-10 md:top-28 md:flex md:w-[30vw] md:flex-col md:justify-between">
           <div>
-            <p className="text-micro uppercase tracking-[0.2em] text-vermilion">(03) — Technical Universe</p>
+            <p className="inline-block rounded-full bg-lime px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-ink">(03) — Technical Universe</p>
             <h2 id="universe-title" className="mt-4 font-display text-big uppercase text-ink">
               Architecture
               <br />
-              <span className="md:pl-[4vw]">&amp; Stack</span>
+              <span className="text-gradient md:pl-[4vw]">&amp; Stack</span>
             </h2>
           </div>
 
@@ -94,7 +100,7 @@ export default function TechUniverse() {
                 rx={`${r}%`}
                 ry={`${r * 0.92}%`}
                 fill="none"
-                stroke="rgb(17 17 20 / 0.12)"
+                stroke="rgb(27 20 70 / 0.12)"
                 strokeDasharray="2 7"
               />
             ))}
@@ -107,7 +113,8 @@ export default function TechUniverse() {
                   y1={`${CORE.y}%`}
                   x2={`${c.x}%`}
                   y2={`${c.y}%`}
-                  stroke="#111114"
+                  stroke={c.id === "frontend" ? "#7A3CFF" : c.id === "backend" ? "#00B8F0" : "#FF4FA3"}
+                  strokeOpacity={0.55}
                   strokeWidth={1.25}
                 />
                 {c.items.map((it, j) => (
@@ -119,7 +126,7 @@ export default function TechUniverse() {
                     y1={`${c.y}%`}
                     x2={`${it.x}%`}
                     y2={`${it.y}%`}
-                    stroke={c.id === "frontend" ? "#FF4D2D" : c.id === "backend" ? "#0047FF" : "#5B5B66"}
+                    stroke={c.id === "frontend" ? "#7A3CFF" : c.id === "backend" ? "#00B8F0" : "#FF4FA3"}
                     strokeWidth={1}
                   />
                 ))}
@@ -129,17 +136,17 @@ export default function TechUniverse() {
 
           <div
             data-core
-            className="absolute flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ink font-display text-xl text-white shadow-[0_0_0_10px_rgba(17,17,20,0.06)] md:h-28 md:w-28 md:text-3xl"
+            className="absolute flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-br from-accent to-aqua font-display text-xl text-white shadow-[0_0_0_12px_rgba(122,60,255,0.12),0_30px_60px_-20px_rgba(122,60,255,0.7)] md:h-28 md:w-28 md:text-3xl"
             style={{ left: `${CORE.x}%`, top: `${CORE.y}%` }}
           >
-            HD<span className="text-vermilion">.</span>
+            HD<span className="text-accent">.</span>
           </div>
 
           {stackClusters.map((c) => (
             <div key={c.id} data-cluster={c.id}>
               <span
                 data-anchor={c.id}
-                className="invisible absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-ink px-3 py-1.5 text-[0.625rem] uppercase tracking-[0.18em] text-white opacity-0 md:text-micro"
+                className={`invisible absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1.5 text-[0.625rem] ${ANCHOR[c.id]} uppercase tracking-[0.18em] text-white opacity-0 md:text-micro`}
                 style={{ left: `${c.x}%`, top: `${c.y}%` }}
               >
                 {c.label.split(" — ")[1]}
@@ -148,7 +155,7 @@ export default function TechUniverse() {
                 <span
                   key={it.name}
                   data-node={c.id}
-                  className="invisible absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border border-ink/15 bg-white px-2.5 py-1 text-[0.6875rem] text-ink opacity-0 shadow-[0_10px_24px_-14px_rgba(17,17,20,0.35)] md:px-3.5 md:py-1.5 md:text-[0.8125rem]"
+                  className="invisible absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border border-ink/15 bg-white px-2.5 py-1 text-[0.6875rem] text-ink opacity-0 shadow-[0_10px_24px_-14px_rgba(27,20,70,0.35)] md:px-3.5 md:py-1.5 md:text-[0.8125rem]"
                   style={{ left: `${it.x}%`, top: `${it.y}%` }}
                 >
                   {it.name}

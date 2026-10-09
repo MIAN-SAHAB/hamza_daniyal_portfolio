@@ -5,10 +5,10 @@ import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import { workflow } from "@/lib/site";
 
 const SKINS = [
-  "bg-white text-ink md:left-[6vw] md:w-[46vw]",
-  "bg-ink text-white md:left-[30vw] md:w-[42vw]",
-  "bg-vermilion text-white md:left-[14vw] md:w-[50vw]",
-  "bg-paper text-ink md:left-[40vw] md:w-[44vw] border border-ink/10",
+  "bg-lime text-ink md:left-[6vw] md:w-[46vw]",
+  "bg-gradient-to-br from-accent to-[#9a5bff] text-white md:left-[30vw] md:w-[42vw]",
+  "bg-gradient-to-br from-aqua to-[#3b8cff] text-white md:left-[14vw] md:w-[50vw]",
+  "bg-gradient-to-br from-pink to-accent text-white md:left-[40vw] md:w-[44vw]",
 ];
 
 /** Stacking process sheets: a tall parent scrubs each sheet up over the last inside a sticky viewport. */
@@ -52,7 +52,7 @@ export default function Process() {
             <li
               key={w.step}
               data-sheet
-              className={`absolute inset-x-0 bottom-0 flex min-h-[46vh] flex-col justify-between p-6 shadow-[0_40px_80px_-40px_rgba(17,17,20,0.5)] md:inset-x-auto md:p-10 ${SKINS[i]}`}
+              className={`absolute inset-x-0 bottom-0 flex min-h-[46vh] flex-col justify-between rounded-[2rem] p-6 shadow-[0_40px_80px_-40px_rgba(27,20,70,0.5)] md:inset-x-auto md:p-10 ${SKINS[i]}`}
               style={{ zIndex: i + 1 }}
             >
               <div className="flex items-start justify-between">
