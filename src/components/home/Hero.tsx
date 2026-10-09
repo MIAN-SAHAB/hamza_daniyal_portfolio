@@ -47,6 +47,8 @@ export default function Hero() {
           0.8,
         );
       entrance.current = tl;
+      // Start states are applied — safe to reveal the (CSS-hidden) hero without a flash.
+      root.current!.classList.add("hero-ready");
 
       // Idle float on the chips — each on its own rhythm.
       q("[data-chip-inner]").forEach((el, i) =>
@@ -79,6 +81,7 @@ export default function Hero() {
     <section
       ref={root}
       aria-labelledby="hero-title"
+      data-hero
       className="relative flex min-h-svh flex-col overflow-hidden px-4 pt-28 md:block md:px-10 md:pt-0"
     >
       {/* colour field */}
@@ -136,7 +139,9 @@ export default function Hero() {
             alt={`Portrait of ${site.name}`}
             width={2287}
             height={2827}
-            preload
+            // LCP on every viewport: fetch immediately at top priority (per Next 16, instead of `preload`).
+            loading="eager"
+            fetchPriority="high"
             sizes="(min-width: 768px) 50vw, 80vw"
             className="h-full w-full object-contain object-bottom"
           />

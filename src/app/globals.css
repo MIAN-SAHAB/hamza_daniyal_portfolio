@@ -87,6 +87,20 @@ html[data-intro="done"] [data-preloader] {
   display: none;
 }
 
+/*
+ * No flash of finished content: entrance-animated blocks ([data-hero]) are
+ * hidden from the very first paint and revealed by JS (`.hero-ready`) only
+ * once their GSAP start states are applied. If JS never runs, the fail-safe
+ * animation reveals them after 3s; <noscript> in the layout reveals instantly.
+ */
+[data-hero]:not(.hero-ready) {
+  visibility: hidden;
+  animation: hero-failsafe 0s linear 3s forwards;
+}
+@keyframes hero-failsafe {
+  to { visibility: visible; }
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;

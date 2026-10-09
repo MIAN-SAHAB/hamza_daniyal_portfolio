@@ -63,6 +63,8 @@ export default function Preloader() {
       };
 
       gsap.from(q("[data-meta]"), { autoAlpha: 0, y: 10, duration: 0.8, stagger: 0.08 });
+      // Strokes are now un-drawn — reveal the CSS-hidden artwork without flashing the finished drawing.
+      q("[data-hero]").forEach((el) => el.classList.add("hero-ready"));
       const intro = gsap.to(progress, { v: 78, duration: reduce ? 0.2 : 2.2, ease: "power2.inOut", onUpdate: render });
 
       // ---- Interaction: pointer parallax ----
@@ -140,7 +142,7 @@ export default function Preloader() {
       <span data-depth="-90" aria-hidden className="blob bottom-[6%] right-[8%] h-[30vw] w-[30vw] bg-lime opacity-30" />
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <div data-stage className="relative aspect-square w-[min(78vw,34rem)]">
+        <div data-stage data-hero className="relative aspect-square w-[min(78vw,34rem)]">
           {/* orbits — far layer */}
           <svg data-depth="40" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeLinecap="round" className="absolute inset-0 h-full w-full text-white/45" aria-hidden>
             <ellipse data-draw="orbit" cx="100" cy="100" rx="94" ry="34" strokeWidth="1" />
@@ -165,7 +167,7 @@ export default function Preloader() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-4 top-5 flex justify-between text-micro uppercase tracking-[0.2em] text-white/80 md:inset-x-10 md:top-8">
+      <div data-hero className="pointer-events-none absolute inset-x-4 top-5 flex justify-between text-micro uppercase tracking-[0.2em] text-white/80 md:inset-x-10 md:top-8">
         <span data-meta>HD — Folio ©2026</span>
         <span data-meta className="hidden sm:inline">Creative Engineering · Since 2018</span>
         <span data-meta>Based in Pakistan</span>

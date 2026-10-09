@@ -2,8 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 
-/** Global overlay state: the menu popup and the spotlight palette are mutually exclusive. */
-type Overlay = "none" | "menu" | "spotlight";
+/** Global overlay state (currently just the menu popup). */
+type Overlay = "none" | "menu";
 
 let current: Overlay = "none";
 const listeners = new Set<() => void>();

@@ -37,7 +37,7 @@ export const playedGames: { appid: number; name: string; hours?: number }[] = []
  * - 2878170: adult title (kept off a professional portfolio)
  * - 431960, 2003310: Wallpaper Engine / Wallpaper Alive (desktop apps, not games)
  */
-export const hiddenGames: number[] = [2878170, 431960, 2003310];
+export const hiddenGames: number[] = [2878170, 431960, 2003310, 2246300, 2176560, 282800, 482890, 1683410, 1935710, 1970710, 2185080, 3248920, 3204090];
 
 export const steamProfile = {
   vanity: "IamTommyVercetti",

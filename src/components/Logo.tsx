@@ -32,6 +32,8 @@ export default function Logo({ className = "" }: { className?: string }) {
         { strokeDashoffset: 0, duration: 1.6, ease: "expo.inOut", stagger: 0.18, delay: 0.3 },
       );
       gsap.from("[data-dot]", { scale: 0, transformOrigin: "50% 50%", duration: 0.8, ease: "back.out(3)", delay: 1.4 });
+      // Strokes now start un-drawn — reveal the CSS-hidden mark without flashing the finished logo.
+      root.current?.querySelector("svg")?.classList.add("hero-ready");
     },
     { scope: root },
   );
@@ -54,7 +56,7 @@ export default function Logo({ className = "" }: { className?: string }) {
       onBlur={() => morph("rest")}
       className={`group inline-flex items-center gap-3 ${className}`}
     >
-      <svg viewBox="0 0 72 40" className="h-8 w-auto overflow-visible md:h-9" fill="none" aria-hidden>
+      <svg data-hero viewBox="0 0 72 40" className="h-8 w-auto overflow-visible md:h-9" fill="none" aria-hidden>
         <path
           data-h
           data-stroke

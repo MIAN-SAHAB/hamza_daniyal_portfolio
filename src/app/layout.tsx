@@ -73,6 +73,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${nevera.variable} ${haas.variable} antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: introBootScript }} />
+        <noscript>
+          <style>{`[data-hero]{visibility:visible!important;animation:none!important}[data-preloader]{display:none!important}`}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

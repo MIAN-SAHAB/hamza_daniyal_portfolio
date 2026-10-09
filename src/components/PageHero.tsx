@@ -42,6 +42,8 @@ export default function PageHero({ id, label, lines, accentLine = 1, intro, asid
         .from(q("[data-line]"), { yPercent: 110, rotate: 3, duration: 1.4, stagger: 0.1 }, 0.1)
         .from(q("[data-fade]"), { autoAlpha: 0, y: 24, duration: 1, stagger: 0.08 }, 0.5)
         .from(q("[data-blob]"), { scale: 0.3, autoAlpha: 0, duration: 2 }, 0);
+      // Start states are applied — reveal the CSS-hidden hero without a flash.
+      root.current!.classList.add("hero-ready");
 
       gsap
         .timeline({
@@ -62,6 +64,7 @@ export default function PageHero({ id, label, lines, accentLine = 1, intro, asid
     <section
       ref={root}
       aria-labelledby={id}
+      data-hero
       className="relative overflow-hidden px-4 pb-16 pt-32 md:min-h-[92svh] md:px-10 md:pb-20 md:pt-36"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0">

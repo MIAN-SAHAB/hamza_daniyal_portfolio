@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import MenuOverlay, { MenuButton } from "./MenuOverlay";
-import Spotlight, { SpotlightButton } from "./Spotlight";
 
 const DARK_HERO_ROUTES = ["/gaming"];
 
@@ -47,7 +46,6 @@ export default function Header() {
         >
           <Logo />
           <div className="flex items-center gap-2 md:gap-3">
-            <SpotlightButton />
             <Link
               href="/contact"
               className="hidden rounded-full bg-gradient-to-r from-accent to-aqua px-5 py-2.5 text-[0.8125rem] uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_-14px_rgba(122,60,255,0.9)] transition-transform duration-500 ease-expo hover:-translate-y-0.5 md:inline-block"
@@ -60,7 +58,6 @@ export default function Header() {
       </header>
 
       <MenuOverlay />
-      <Spotlight />
     </>
   );
 }
