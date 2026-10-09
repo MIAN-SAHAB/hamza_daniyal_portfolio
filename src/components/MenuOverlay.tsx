@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { closeOverlay, lockScroll, openOverlay, useOverlay } from "@/lib/ui";
 import { images, nav, projects, services, site } from "@/lib/site";
-import CopyEmail from "./CopyEmail";
+import CopyEmail, { PhoneLink } from "./CopyEmail";
 import { ScribbleLoop } from "./draw/art";
 
 const PREVIEW: Record<string, { src: string; alt: string; tint: string }> = {
@@ -191,6 +191,9 @@ export default function MenuOverlay() {
             <div data-fade className="mt-14 md:pl-4">
               <p className="font-display text-sm uppercase tracking-[0.08em] text-lime">Say hello</p>
               <CopyEmail className="mt-2 text-lede font-medium text-white" />
+              <p className="mt-2 text-white/80">
+                <PhoneLink />
+              </p>
               <ul className="mt-6 flex flex-wrap gap-2">
                 {site.socials.map((s) => (
                   <li key={s.label}>

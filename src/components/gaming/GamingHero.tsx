@@ -79,7 +79,7 @@ export default function GamingHero({ steam }: { steam: SteamData }) {
             className="mt-10 flex max-w-md items-center gap-5 rounded-[1.75rem] border border-white/15 bg-white/[0.06] p-4 pr-6 backdrop-blur-md"
           >
             <div className="relative shrink-0 rounded-2xl bg-gradient-to-br from-accent to-aqua p-[3px]">
-              <Image src={steam.avatar} alt={`${steam.persona} Steam avatar`} width={84} height={84} className="rounded-[0.9rem]" />
+              <Image src={steam.avatar} alt={`${steam.persona} Steam avatar`} width={84} height={84} loading="eager" className="rounded-[0.9rem]" />
               <span
                 aria-hidden
                 className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#160b33] ${online ? "bg-[#3ddc84]" : "bg-white/40"}`}

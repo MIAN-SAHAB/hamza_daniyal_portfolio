@@ -45,6 +45,7 @@ export const jsonLd = {
       description: site.tagline,
       url: site.url,
       email: `mailto:${site.email}`,
+      telephone: site.phone.e164,
       sameAs: site.socials.map((s) => s.href),
       knowsAbout: skills,
       hasOccupation: {

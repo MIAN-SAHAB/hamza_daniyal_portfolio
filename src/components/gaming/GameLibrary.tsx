@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import GameArt from "./GameArt";
+import { gsap, ScrollTrigger, SCRUB, useGSAP } from "@/lib/gsap";
 import type { SteamGame } from "@/lib/steam";
 import { Crosshair, Sparkle } from "@/components/draw/art";
 
@@ -17,21 +17,6 @@ function colsFor(n: number) {
   if (n <= 8) return "grid-cols-3 md:grid-cols-4";
   if (n <= 12) return "grid-cols-4 md:grid-cols-6";
   return "grid-cols-4 md:grid-cols-8";
-}
-
-/** Capsule art with a fallback to the header image for older titles without portrait art. */
-function Cover({ game, sizes }: { game: SteamGame; sizes: string }) {
-  const [src, setSrc] = useState(game.capsule);
-  return (
-    <Image
-      src={src}
-      alt={`${game.name} cover art`}
-      fill
-      sizes={sizes}
-      onError={() => setSrc(game.header)}
-      className="object-cover"
-    />
-  );
 }
 
 /**
@@ -110,6 +95,7 @@ export default function GameLibrary({ games }: { games: SteamGame[] }) {
   ];
 
   return (
+    <>
     <section
       ref={root}
       aria-labelledby="game-library-title"
@@ -161,7 +147,7 @@ export default function GameLibrary({ games }: { games: SteamGame[] }) {
             {focus && (
               <div className="relative mt-6 hidden overflow-hidden rounded-[1.5rem] border border-white/15 md:block" aria-live="polite">
                 <div className="relative aspect-[16/7]">
-                  <Image key={focus.appid} src={focus.header} alt="" fill sizes="30vw" className="object-cover" />
+                  <GameArt sources={[focus.header, focus.hero]} name={focus.name} alt="" eager className="absolute inset-0 h-full w-full" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#160b33] to-transparent" />
                 </div>
                 <div className="relative -mt-8 p-5">
@@ -189,9 +175,9 @@ export default function GameLibrary({ games }: { games: SteamGame[] }) {
             )}
 
             {extra > 0 && (
-              <p className="mt-4 text-sm text-white/60">
-                + {extra} more in the full library.
-              </p>
+              <a href="#library-rest" className="mt-4 inline-flex items-center gap-2 text-sm text-lime hover:underline">
+                + {extra} more below ↓
+              </a>
             )}
           </div>
 
@@ -221,7 +207,8 @@ export default function GameLibrary({ games }: { games: SteamGame[] }) {
                         : "border-white/10"
                     }`}
                   >
-                    <Cover game={g} sizes={dealt.length > 12 ? "12vw" : "22vw"} />
+                    {/* Eager: board cards start off-screen/hidden until dealt, so lazy loading would delay them. */}
+                    <GameArt sources={[g.capsule, g.header]} name={g.name} alt={`${g.name} cover art`} eager className="absolute inset-0 h-full w-full" />
                     <span className="absolute left-1.5 top-1.5 rounded-full bg-[#160b33]/80 px-1.5 py-0.5 text-[0.625rem] font-medium tabular-nums text-white backdrop-blur">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -237,6 +224,57 @@ export default function GameLibrary({ games }: { games: SteamGame[] }) {
 
         <Sparkle strokeWidth={3} start="top 50%" end="top top" className="pointer-events-none absolute bottom-8 left-[30%] w-10 text-lime" />
       </div>
+    </section>
+    {extra > 0 && <LibraryRest games={sorted.slice(MAX_DEALT)} offset={MAX_DEALT} sortKey={sort} />}
+    </>
+  );
+}
+
+/** Everything past the sticky board: covers reveal one by one as they scroll into view. */
+function LibraryRest({ games, offset, sortKey }: { games: SteamGame[]; offset: number; sortKey: Sort }) {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const cards = gsap.utils.toArray<HTMLElement>("[data-rest]", root.current);
+      gsap.set(cards, { autoAlpha: 0, y: 80, rotate: (i: number) => ((i * 23) % 16) - 8, scale: 0.85 });
+      ScrollTrigger.batch(cards, {
+        start: "top 92%",
+        onEnter: (batch) =>
+          gsap.to(batch, { autoAlpha: 1, y: 0, rotate: 0, scale: 1, duration: 0.9, ease: "back.out(1.4)", stagger: 0.09, overwrite: true }),
+        onLeaveBack: (batch) =>
+          gsap.to(batch, { autoAlpha: 0, y: 80, scale: 0.85, duration: 0.4, stagger: 0.03, overwrite: true }),
+      });
+    },
+    { scope: root, dependencies: [sortKey], revertOnUpdate: true },
+  );
+
+  return (
+    <section
+      id="library-rest"
+      ref={root}
+      aria-label="More games I've played"
+      className="relative scroll-mt-24 bg-[#160b33] px-4 pb-28 pt-6 text-white md:px-10"
+    >
+      <p className="mb-8 text-micro uppercase tracking-[0.2em] text-white/60">
+        The rest of the library · {games.length} more
+      </p>
+      <ol className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+        {games.map((g, i) => (
+          <li key={g.appid} data-rest>
+            <a href={g.link} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`${g.name} — ${g.hours} hours played`}>
+              <div className="relative aspect-[2/3] overflow-hidden rounded-xl border-2 border-white/10 transition-[border-color,transform] duration-300 group-hover:-translate-y-1.5 group-hover:border-lime">
+                <GameArt sources={[g.capsule, g.header]} name={g.name} alt={`${g.name} cover art`} lowPriority className="absolute inset-0 h-full w-full" />
+                <span className="absolute left-1.5 top-1.5 rounded-full bg-[#160b33]/80 px-1.5 py-0.5 text-[0.625rem] font-medium tabular-nums backdrop-blur">
+                  {String(offset + i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <p className="mt-2 truncate text-[0.8125rem] text-white/85">{g.name}</p>
+              <p className="text-[0.6875rem] text-white/50">{g.hours.toLocaleString("en-US")} hrs</p>
+            </a>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

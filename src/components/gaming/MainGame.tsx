@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import GameArt from "./GameArt";
 import { useRef } from "react";
 import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import type { SteamGame } from "@/lib/steam";
@@ -46,7 +46,7 @@ export default function MainGame({ game }: { game: SteamGame }) {
     <section ref={root} aria-labelledby="main-game-title" className="relative min-h-[300vh] bg-[#160b33]">
       <div className="sticky top-0 h-screen overflow-hidden text-white">
         <div data-art className="absolute inset-0 will-change-transform">
-          <Image src={game.hero} alt={`${game.name} key art`} fill sizes="100vw" className="object-cover" />
+          <GameArt sources={[game.hero, game.header]} name={game.name} alt={`${game.name} key art`} eager className="absolute inset-0 h-full w-full" />
         </div>
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#160b33] via-[#160b33]/40 to-[#160b33]/70" />
 

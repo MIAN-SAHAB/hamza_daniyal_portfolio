@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import GameArt from "./GameArt";
 import { useRef } from "react";
 import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import type { SteamData, SteamGame } from "@/lib/steam";
@@ -31,7 +31,7 @@ function Shelf({ title, games, kind }: { title: string; games: SteamGame[]; kind
                 <div
                   className={`relative aspect-[2/3] overflow-hidden rounded-[1.25rem] bg-mist shadow-[0_30px_60px_-30px_rgba(27,20,70,0.6)] transition-transform duration-700 ease-expo group-hover:-translate-y-2 group-hover:rotate-0 ${TILTS[i % TILTS.length]}`}
                 >
-                  <Image src={g.capsule} alt={`${g.name} cover art`} fill sizes="(min-width: 1024px) 16vw, 45vw" className="object-cover" />
+                  <GameArt sources={[g.capsule, g.header]} name={g.name} alt={`${g.name} cover art`} className="absolute inset-0 h-full w-full" />
                   <span className="absolute left-2 top-2 rounded-full bg-lime px-2 py-0.5 text-[0.625rem] font-medium uppercase tracking-[0.12em] text-ink">
                     #{i + 1}
                   </span>
@@ -99,7 +99,8 @@ export default function GameShelf({ steam }: { steam: SteamData }) {
     steam.level ? { value: steam.level, count: true, label: "Steam level" } : null,
   ].filter(Boolean) as { value: number; count: boolean; label: string }[];
   // Public profile only lists a couple of games — lay stats and covers side by side.
-  const compact = steam.topGames.length <= 3 && steam.recent.length === 0;
+  const shown = steam.recent.length || Math.min(3, steam.topGames.length);
+  const compact = shown <= 3;
 
   return (
     <section ref={root} aria-labelledby="library-title" className="relative overflow-hidden bg-bone px-4 py-28 md:px-10 md:py-40">
@@ -128,8 +129,12 @@ export default function GameShelf({ steam }: { steam: SteamData }) {
         </dl>
 
         <div className={compact ? "md:col-span-7 md:col-start-6" : ""}>
-          <Shelf title="Most played" games={steam.topGames} kind="top" />
-          {steam.recent.length > 0 && <Shelf title="Recently played" games={steam.recent} kind="recent" />}
+          {/* The full collection lives in the library below — this shelf shows what's hot right now. */}
+          {steam.recent.length > 0 ? (
+            <Shelf title="Played lately" games={steam.recent} kind="recent" />
+          ) : (
+            <Shelf title="Most played" games={steam.topGames.slice(0, 3)} kind="top" />
+          )}
         </div>
       </div>
 

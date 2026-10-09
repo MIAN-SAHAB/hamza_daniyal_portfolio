@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import ContactForm from "@/components/contact/ContactForm";
-import CopyEmail from "@/components/CopyEmail";
+import CopyEmail, { PhoneLink } from "@/components/CopyEmail";
 import Parallax from "@/components/motion/Parallax";
 import { pageMetadata } from "@/lib/seo";
 import { Envelope, PaperPlane } from "@/components/draw/art";
@@ -52,6 +52,10 @@ export default function ContactPage() {
             <div>
               <p className="mb-3 text-micro uppercase tracking-[0.2em]">Prefer email?</p>
               <CopyEmail className="text-lede text-ink" />
+            </div>
+            <div>
+              <p className="mb-3 text-micro uppercase tracking-[0.2em]">Rather talk?</p>
+              <PhoneLink className="text-lede text-ink" />
             </div>
 
             <div className="rounded-[1.5rem] bg-gradient-to-br from-accent to-aqua p-6 text-white shadow-[0_30px_60px_-30px_rgba(122,60,255,0.7)]">

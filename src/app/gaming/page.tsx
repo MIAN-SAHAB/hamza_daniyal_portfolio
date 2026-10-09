@@ -4,6 +4,7 @@ import MainGame from "@/components/gaming/MainGame";
 import GameShelf from "@/components/gaming/GameShelf";
 import GameLibrary from "@/components/gaming/GameLibrary";
 import SquadUp from "@/components/gaming/SquadUp";
+import GamepadToy from "@/components/gaming/GamepadToy";
 import CtaBand from "@/components/CtaBand";
 import { getSteamData } from "@/lib/steam";
 import { pageMetadata } from "@/lib/seo";
@@ -39,6 +40,7 @@ export default async function GamingPage() {
             or in game.
           </>
         }
+        art={<GamepadToy className="text-ink" />}
         primary={{ href: "/contact", label: "Start a project" }}
         secondary={{ href: discord.href, label: "Ping me on Discord", external: true }}
       />

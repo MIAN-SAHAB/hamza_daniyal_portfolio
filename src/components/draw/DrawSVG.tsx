@@ -50,7 +50,7 @@ export default function DrawSVG({
         const len = Math.ceil(el.getTotalLength()) + 2;
         gsap.set(el, { strokeDasharray: len, strokeDashoffset: len });
       });
-      gsap.set(fills, { autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%" });
+      if (fills.length) gsap.set(fills, { autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%" });
 
       const t = gsap.timeline(
         mode === "scroll"

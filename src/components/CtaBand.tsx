@@ -10,10 +10,12 @@ type Props = {
   secondary?: Action;
   tone?: "gradient" | "lime";
   id: string;
+  /** Optional illustration shown above the buttons, replacing the drawn arrow. */
+  art?: React.ReactNode;
 };
 
 /** Mid-page call to action: a colour panel with a self-drawing arrow pointing at the buttons. */
-export default function CtaBand({ eyebrow, title, primary, secondary, tone = "gradient", id }: Props) {
+export default function CtaBand({ eyebrow, title, primary, secondary, tone = "gradient", id, art }: Props) {
   const panel =
     tone === "lime"
       ? "bg-lime text-ink"
@@ -38,7 +40,11 @@ export default function CtaBand({ eyebrow, title, primary, secondary, tone = "gr
             </h2>
           </div>
           <div className="relative flex flex-wrap items-center gap-3 md:col-span-4 md:justify-end">
-            <CurvedArrow strokeWidth={3} start="top 85%" end="top 45%" className="absolute -left-28 -top-24 hidden w-24 -rotate-12 md:block" />
+            {art ? (
+              <div className="mb-4 w-full max-w-[18rem] md:ml-auto">{art}</div>
+            ) : (
+              <CurvedArrow strokeWidth={3} start="top 85%" end="top 45%" className="absolute -left-28 -top-24 hidden w-24 -rotate-12 md:block" />
+            )}
             <Link
               href={primary.href}
               {...linkProps(primary)}

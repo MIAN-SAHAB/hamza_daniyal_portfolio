@@ -60,6 +60,8 @@ const ITEMS: Item[] = [
       await navigator.clipboard?.writeText(site.email).catch(() => undefined);
     },
   },
+  { id: "action-mail", group: "Actions", label: "Send an email", hint: site.email, keywords: "mail contact", run: () => go(`mailto:${site.email}`) },
+  { id: "action-call", group: "Actions", label: "Call me", hint: site.phone.display, keywords: "phone call number", run: () => go(site.phone.href) },
   { id: "action-brief", group: "Actions", label: "Start a project", hint: "Send a brief", keywords: "hire contact", run: () => go("/contact") },
   ...site.socials.map((s) => ({
     id: `social-${s.label}`,

@@ -1,60 +1,61 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useState } from "react";
 import { site } from "@/lib/site";
 
-/** Click-to-copy email with a rolling label swap. Falls back to mailto if the clipboard is blocked. */
+/**
+ * Email address as a real mailto: link, plus a small copy-to-clipboard button
+ * for people without a configured mail client.
+ */
 export default function CopyEmail({ className = "" }: { className?: string }) {
-  const root = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
-
-  const { contextSafe } = useGSAP({ scope: root });
-
-  const roll = contextSafe(() => {
-    gsap.fromTo("[data-roll]", { yPercent: 0 }, { yPercent: -100, duration: 0.6, ease: "expo.inOut" });
-  });
-  const unroll = contextSafe(() => {
-    gsap.to("[data-roll]", { yPercent: 0, duration: 0.6, ease: "expo.inOut" });
-  });
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(site.email);
       setCopied(true);
-      roll();
-      setTimeout(() => {
-        unroll();
-        setCopied(false);
-      }, 2200);
+      setTimeout(() => setCopied(false), 1800);
     } catch {
-      window.location.href = `mailto:${site.email}`;
+      /* clipboard blocked — the mailto link still works */
     }
   };
 
   return (
-    <button
-      ref={root}
-      type="button"
-      onClick={copy}
-      aria-label={`Copy email address ${site.email}`}
-      className={`group relative inline-flex items-center gap-3 text-left ${className}`}
-    >
-      <span className="relative block h-[1.3em] overflow-hidden">
-        <span data-roll className="block">
-          <span className="block h-[1.3em] link-underline">{site.email}</span>
-          <span className="block h-[1.3em] text-accent">Copied to clipboard ✓</span>
-        </span>
-      </span>
-      <span
-        aria-hidden
-        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-current text-xs transition-transform duration-500 ease-expo group-hover:rotate-45"
+    <span className={`inline-flex flex-wrap items-center gap-3 ${className}`}>
+      <a href={`mailto:${site.email}`} className="link-underline">
+        {site.email}
+      </a>
+      <button
+        type="button"
+        onClick={copy}
+        aria-label={copied ? "Email address copied" : "Copy email address"}
+        title={copied ? "Copied!" : "Copy"}
+        className="inline-flex h-8 items-center justify-center gap-1.5 rounded-full border border-current px-2.5 text-[0.6875rem] uppercase tracking-[0.14em] opacity-80 transition-opacity hover:opacity-100"
       >
-        ↗
-      </span>
+        <svg aria-hidden viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          {copied ? (
+            <path d="M5 12l5 5L20 7" />
+          ) : (
+            <>
+              <rect x="9" y="9" width="11" height="11" rx="2" />
+              <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+            </>
+          )}
+        </svg>
+        {copied ? "Copied" : "Copy"}
+      </button>
       <span role="status" className="sr-only">
         {copied ? "Email copied to clipboard" : ""}
       </span>
-    </button>
+    </span>
+  );
+}
+
+/** Phone number as a tap-to-call link. */
+export function PhoneLink({ className = "" }: { className?: string }) {
+  return (
+    <a href={site.phone.href} className={`link-underline ${className}`}>
+      {site.phone.display}
+    </a>
   );
 }

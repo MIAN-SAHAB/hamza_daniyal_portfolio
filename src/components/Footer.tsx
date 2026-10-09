@@ -1,7 +1,7 @@
 import Link from "@/components/AppLink";
 import { nav, site } from "@/lib/site";
 import CurrentYear from "./CurrentYear";
-import CopyEmail from "./CopyEmail";
+import CopyEmail, { PhoneLink } from "./CopyEmail";
 import Parallax from "./motion/Parallax";
 import { Sparkle, Squiggle } from "./draw/art";
 
@@ -38,6 +38,9 @@ export default function Footer() {
             <Squiggle strokeWidth={6} start="top 95%" end="top 55%" className="mt-2 w-64 text-lime" />
             <div className="mt-8">
               <CopyEmail className="text-lede text-white" />
+              <p className="mt-3 text-lede text-white/85">
+                <PhoneLink />
+              </p>
             </div>
           </div>
 

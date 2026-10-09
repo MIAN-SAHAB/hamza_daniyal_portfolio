@@ -12,6 +12,7 @@ export const site = {
     "Senior full-stack developer and creative technologist engineering high-performance web platforms, headless commerce and real-time WebGL experiences.",
   // TODO: replace LinkedIn with the real profile before going live.
   email: "contact@hamzadaniyal.com",
+  phone: { display: "+92 (333) 230-3315", href: "tel:+923332303315", e164: "+923332303315" },
   location: "Pakistan",
   since: 2018,
   socials: [
@@ -30,6 +31,13 @@ export const site = {
  * With STEAM_API_KEY set, every played game on the account is added automatically.
  */
 export const playedGames: { appid: number; name: string; hours?: number }[] = [];
+
+/**
+ * Steam app ids never shown on /gaming, even if played. Remove an id to show it.
+ * - 2878170: adult title (kept off a professional portfolio)
+ * - 431960, 2003310: Wallpaper Engine / Wallpaper Alive (desktop apps, not games)
+ */
+export const hiddenGames: number[] = [2878170, 431960, 2003310];
 
 export const steamProfile = {
   vanity: "IamTommyVercetti",
@@ -62,6 +70,8 @@ export const images = {
   waves: unsplash("photo-1634017839464-5c339ebe3cb4"),
   codeScreen: unsplash("photo-1555066931-4365d14bab8c"),
   product: unsplash("photo-1505740420928-5e560c06d30e"),
+  /** Fallback art for any game whose Steam cover can't be loaded. */
+  gaming: unsplash("photo-1593305841991-05c297ba4575", 900),
 } as const;
 
 export type Project = {

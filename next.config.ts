@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
-      // Steam avatars + game art for /gaming
-      { protocol: "https", hostname: "avatars.fastly.steamstatic.com", pathname: "/**" },
-      { protocol: "https", hostname: "cdn.cloudflare.steamstatic.com", pathname: "/steam/apps/**" },
+      // Steam avatars + game art for /gaming. Steam rotates between CDN hosts
+      // (fastly / akamai / cloudflare), so allow every steamstatic subdomain.
+      { protocol: "https", hostname: "**.steamstatic.com", pathname: "/**" },
     ],
   },
   turbopack: {
