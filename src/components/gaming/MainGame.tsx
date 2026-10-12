@@ -2,7 +2,7 @@
 
 import GameArt from "./GameArt";
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import type { SteamGame } from "@/lib/steam";
 import { Crosshair } from "@/components/draw/art";
 
@@ -16,7 +16,7 @@ const LINES = [
 export default function MainGame({ game }: { game: SteamGame }) {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const counter = q("[data-hours]")[0];

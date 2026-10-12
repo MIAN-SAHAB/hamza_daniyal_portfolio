@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "@/components/AppLink";
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import { projects, type Project } from "@/lib/site";
 import { BrowserWindow } from "@/components/draw/art";
 
@@ -25,7 +25,7 @@ const LAYOUTS = [
 export default function Works() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const track = q("[data-track]")[0] as HTMLElement;

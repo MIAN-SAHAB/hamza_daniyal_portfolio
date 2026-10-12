@@ -1,14 +1,14 @@
 "use client";
 
 import { useId, useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 
 /** Circular text badge whose ring rotation is scrubbed to page scroll. */
 export default function RotatingBadge({ text, center, size = 148 }: { text: string; center: string; size?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const id = useId().replace(/:/g, "");
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       gsap.to("[data-ring]", {
         rotate: 360,

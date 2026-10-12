@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type HTMLAttributes } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   /** Total travel across its time on screen, in vh (y) or vw (x). Negative = against scroll. */
@@ -14,7 +14,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 export default function Parallax({ speed = 20, axis = "y", rotate = 0, children, ...rest }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const travel = () => ((axis === "y" ? window.innerHeight : window.innerWidth) * speed) / 200;
       gsap.fromTo(

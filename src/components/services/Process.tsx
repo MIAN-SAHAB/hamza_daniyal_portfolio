@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import { workflow } from "@/lib/site";
 
 const SKINS = [
@@ -15,7 +15,7 @@ const SKINS = [
 export default function Process() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const sheets = q("[data-sheet]");

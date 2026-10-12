@@ -2,7 +2,7 @@
 
 import GameArt from "./GameArt";
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import type { SteamData, SteamGame } from "@/lib/steam";
 import { Joystick, Trophy } from "@/components/draw/art";
 
@@ -60,7 +60,7 @@ function Shelf({ title, games, kind }: { title: string; games: SteamGame[]; kind
 export default function GameShelf({ steam }: { steam: SteamData }) {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       q("[data-game]").forEach((el, i) => {

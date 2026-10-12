@@ -31,7 +31,8 @@ export default function Logo({ className = "" }: { className?: string }) {
         { strokeDashoffset: 1 },
         { strokeDashoffset: 0, duration: 1.6, ease: "expo.inOut", stagger: 0.18, delay: 0.3 },
       );
-      gsap.from("[data-dot]", { scale: 0, transformOrigin: "50% 50%", duration: 0.8, ease: "back.out(3)", delay: 1.4 });
+      // Fade, not scale: a transform on an SVG child forces a layout every frame.
+      gsap.from("[data-dot]", { autoAlpha: 0, duration: 0.6, ease: "power2.out", delay: 1.4 });
       // Strokes now start un-drawn — reveal the CSS-hidden mark without flashing the finished logo.
       root.current?.querySelector("svg")?.classList.add("hero-ready");
     },

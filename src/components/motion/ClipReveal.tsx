@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 
 type Props = {
   children: ReactNode;
@@ -20,7 +20,7 @@ const START = {
 export default function ClipReveal({ children, className = "", from = "center" }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const tl = gsap.timeline({
         defaults: { ease: "none" },

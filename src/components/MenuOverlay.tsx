@@ -32,6 +32,10 @@ export default function MenuOverlay() {
   const root = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const preview = PREVIEW[hovered ?? pathname] ?? PREVIEW["/"];
+  // The (invisible) overlay covers the viewport, so lazy-loading can't hold its
+  // preview image back — only mount it once the menu has actually been opened.
+  const [armed, setArmed] = useState(false);
+  if (open && !armed) setArmed(true);
 
   // Close when the route changes.
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function MenuOverlay() {
           .fromTo(q("[data-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 1, stagger: 0.06 }, 0.35)
           .fromTo(q("[data-card]"), { rotate: 18, scale: 0.7, autoAlpha: 0 }, { rotate: 6, scale: 1, autoAlpha: 1, duration: 1.2, ease: "back.out(1.4)" }, 0.45)
           .fromTo(q("[data-fade]"), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.6);
-      } else {
+      } else if (armed) {
         gsap
           .timeline()
           .to(root.current, { clipPath: "inset(0% 0% 100% 0%)", duration: 0.6, ease: "expo.inOut" })
@@ -170,14 +174,14 @@ export default function MenuOverlay() {
                 data-card
                 className={`relative aspect-[16/10] overflow-hidden rounded-[1.6rem] border-[6px] border-white bg-gradient-to-br ${preview.tint} shadow-[0_40px_90px_-30px_rgba(0,0,0,0.7)]`}
               >
-                <Image
+                {armed && <Image
                   key={preview.src}
                   src={preview.src}
                   alt={preview.alt}
                   fill
                   sizes="(min-width: 768px) 34rem, 90vw"
                   className={`animate-[page-enter_0.6s_var(--ease-out-expo)_both] ${preview.src.endsWith(".webp") ? "object-contain object-bottom" : "object-cover"}`}
-                />
+                />}
               </div>
               <span
                 data-fade

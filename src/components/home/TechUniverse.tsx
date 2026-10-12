@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import { stackClusters } from "@/lib/site";
 
 const CORE = { x: 50, y: 50 };
@@ -15,7 +15,7 @@ const ANCHOR: Record<string, string> = {
 export default function TechUniverse() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const tl = gsap.timeline({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode, type SVGProps } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP, useGSAP } from "@/lib/gsap";
 import { useIntroDone } from "@/lib/intro";
 
 type Props = Omit<SVGProps<SVGSVGElement>, "ref"> & {
@@ -40,7 +40,9 @@ export default function DrawSVG({
   const tl = useRef<gsap.core.Timeline | null>(null);
   const introDone = useIntroDone();
 
-  useGSAP(
+  // Scroll-scrubbed drawings are off screen at first paint; intro ones must set up immediately.
+  const setup = mode === "scroll" ? useDeferredGSAP : useGSAP;
+  setup(
     () => {
       const svg = ref.current!;
       const strokes = Array.from(svg.querySelectorAll<SVGGeometryElement>(SHAPES)).filter((el) => !el.hasAttribute("data-fill"));
@@ -50,7 +52,8 @@ export default function DrawSVG({
         const len = Math.ceil(el.getTotalLength()) + 2;
         gsap.set(el, { strokeDasharray: len, strokeDashoffset: len });
       });
-      if (fills.length) gsap.set(fills, { autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%" });
+      // Fills fade rather than scale: any transform on an SVG child forces a layout every frame.
+      if (fills.length) gsap.set(fills, { autoAlpha: 0 });
 
       const t = gsap.timeline(
         mode === "scroll"
@@ -71,7 +74,7 @@ export default function DrawSVG({
         stagger: mode === "scroll" ? 0.15 : duration / Math.max(strokes.length * 2.5, 1),
       });
       if (fills.length) {
-        t.to(fills, { autoAlpha: 1, scale: 1, duration: mode === "scroll" ? 0.3 : 0.6, ease: "back.out(2)", stagger: 0.08 }, "-=0.3");
+        t.to(fills, { autoAlpha: 1, duration: mode === "scroll" ? 0.3 : 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.3");
       }
       tl.current = t;
     },

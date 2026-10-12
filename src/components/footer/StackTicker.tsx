@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useDeferredGSAP } from "@/lib/gsap";
 
 const ROW_A = ["Next.js", "TypeScript", "React", "GSAP", "Three.js", "React Three Fiber", "Tailwind CSS", "WebGL"];
 const ROW_B = ["Laravel", "PHP", "MySQL", "Shopify Storefront API", "Headless Commerce", "WordPress", "Custom Plugins", "Core Web Vitals"];
@@ -13,7 +13,7 @@ const ROW_B = ["Laravel", "PHP", "MySQL", "Shopify Storefront API", "Headless Co
 export default function StackTicker() {
   const root = useRef<HTMLDivElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const rows = gsap.utils.toArray<HTMLElement>("[data-row]", root.current);
       // Each row holds its chips twice, so sliding by 50% loops seamlessly. Row B runs the other way.

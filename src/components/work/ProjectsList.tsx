@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "@/components/AppLink";
 import { useRef, useState, type ComponentType } from "react";
-import { gsap, ScrollTrigger, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import { projects } from "@/lib/site";
 import { Bolt, BrowserWindow, Cart, Orbits, WireCube } from "@/components/draw/art";
 
@@ -22,7 +22,7 @@ export default function ProjectsList() {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       q("[data-project]").forEach((article, i) => {

@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { completeIntro } from "@/lib/intro";
 
+const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 function waitForAssets() {
   const fonts = document.fonts?.ready ?? Promise.resolve();
   const load =
@@ -38,7 +40,8 @@ export default function Preloader() {
 
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const q = gsap.utils.selector(root);
-      const counter = q("[data-count]")[0] as HTMLElement;
+      // Odometer reels: moved with transforms only, so the counter never forces a layout per frame.
+      const reels = q("[data-reel]").map((el) => gsap.quickSetter(el, "yPercent"));
 
       // Every stroke becomes a dash we can "draw".
       const strokes = q("[data-draw]") as unknown as SVGGeometryElement[];
@@ -57,7 +60,10 @@ export default function Preloader() {
 
       const progress = { v: 0 };
       const render = () => {
-        counter.textContent = String(Math.round(progress.v)).padStart(3, "0");
+        String(Math.round(progress.v))
+          .padStart(3, "0")
+          .split("")
+          .forEach((d, i) => reels[i](-Number(d) * 10));
         draw.progress(progress.v / 100);
         gsap.set(q("[data-bar]"), { scaleX: progress.v / 100 });
       };
@@ -175,7 +181,17 @@ export default function Preloader() {
 
       <div data-counter className="pointer-events-none absolute bottom-5 left-4 md:bottom-8 md:left-10">
         <div className="flex items-baseline gap-1">
-          <span data-count className="font-display text-big tabular-nums">000</span>
+          <span className="flex h-[1em] overflow-hidden font-display text-big leading-none tabular-nums" aria-hidden>
+            {[0, 1, 2].map((i) => (
+              <span key={i} data-reel className="flex flex-col self-start will-change-transform">
+                {DIGITS.map((d) => (
+                  <span key={d} className="h-[1em]">
+                    {d}
+                  </span>
+                ))}
+              </span>
+            ))}
+          </span>
           <span className="text-micro uppercase tracking-[0.2em] text-lime">%</span>
         </div>
         <span className="mt-3 block h-[3px] w-40 overflow-hidden rounded-full bg-white/25">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ElementType, type ReactNode } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 
 type Props = {
   /** Plain text; wrap a phrase in *asterisks* to set it in the accent colour. */
@@ -21,7 +21,7 @@ type Props = {
 export default function ScrubWords({ text, as: Tag = "p", className = "", start = "top 85%", end = "bottom 45%", id }: Props) {
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       gsap.fromTo(
         "[data-w]",

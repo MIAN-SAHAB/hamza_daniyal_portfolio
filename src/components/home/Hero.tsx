@@ -30,10 +30,14 @@ export default function Hero() {
 
       // ---- Entrance (auto-plays once the preloader hands off) ----
       const tl = gsap.timeline({ paused: true, defaults: { ease: "expo.out" } });
-      tl.from(q("[data-blob]"), { scale: 0.3, autoAlpha: 0, duration: d(2), stagger: 0.15 })
-        .from(q("[data-disc]"), { scale: 0.2, duration: d(1.6), ease: "back.out(1.4)" }, 0.1)
-        .from(q("[data-char]"), { yPercent: 115, rotate: 8, duration: d(1.4), stagger: 0.035 }, 0.2)
-        .from(q("[data-figure]"), { yPercent: 18, autoAlpha: 0, duration: d(1.6) }, 0.35)
+      // The large shapes only animate in behind the preloader; without one they
+      // were painted in place at first paint (see [data-paint-early] in globals.css).
+      if (document.documentElement.dataset.intro !== "done") {
+        tl.from(q("[data-blob]"), { scale: 0.3, autoAlpha: 0, duration: d(2), stagger: 0.15 }, 0)
+          .from(q("[data-disc]"), { scale: 0.2, duration: d(1.6), ease: "back.out(1.4)" }, 0.1)
+          .from(q("[data-figure]"), { yPercent: 18, autoAlpha: 0, duration: d(1.6) }, 0.35);
+      }
+      tl.from(q("[data-char]"), { yPercent: 115, rotate: 8, duration: d(1.4), stagger: 0.035 }, 0.2)
         .from(q("[data-front]"), { autoAlpha: 0, duration: d(1) }, 1.1)
         .from(q("[data-chip]"), { autoAlpha: 0, scale: 0.5, y: 30, duration: d(1.1), stagger: 0.12, ease: "back.out(2)" }, 0.9)
         .from(q("[data-fade]"), { autoAlpha: 0, y: 24, duration: d(1), stagger: 0.08 }, 0.7)
@@ -86,9 +90,9 @@ export default function Hero() {
     >
       {/* colour field */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <span data-blob className="blob -right-[10vw] -top-[12vw] h-[48vw] w-[48vw] bg-aqua" />
-        <span data-blob className="blob -left-[14vw] bottom-[-18vw] h-[46vw] w-[46vw] bg-accent opacity-40" />
-        <span data-blob className="blob left-[38%] top-[8%] h-[16vw] w-[16vw] bg-lime opacity-50" />
+        <span data-blob data-paint-early className="blob -right-[10vw] -top-[12vw] h-[48vw] w-[48vw] bg-aqua" />
+        <span data-blob data-paint-early className="blob -left-[14vw] bottom-[-18vw] h-[46vw] w-[46vw] bg-accent opacity-40" />
+        <span data-blob data-paint-early className="blob left-[38%] top-[8%] h-[16vw] w-[16vw] bg-lime opacity-50" />
       </div>
 
       {/* meta row */}
@@ -124,6 +128,7 @@ export default function Hero() {
       >
         <div
           data-disc
+          data-paint-early
           aria-hidden
           className="absolute bottom-[4%] left-1/2 aspect-square w-[96%] -translate-x-1/2 rounded-full bg-gradient-to-br from-accent via-[#9a5bff] to-aqua shadow-[0_60px_120px_-40px_rgba(122,60,255,0.6)]"
         />
@@ -133,7 +138,7 @@ export default function Hero() {
           strokeWidth={1.2}
           className="absolute bottom-[-4%] left-1/2 w-[140%] -translate-x-1/2 text-accent/40"
         />
-        <div data-figure className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_82%,transparent)]">
+        <div data-figure data-paint-early className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_82%,transparent)]">
           <Image
             src="/assets/images/Hamza-Daniyal.webp"
             alt={`Portrait of ${site.name}`}

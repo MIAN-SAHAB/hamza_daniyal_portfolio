@@ -92,13 +92,26 @@ html[data-intro="done"] [data-preloader] {
  * hidden from the very first paint and revealed by JS (`.hero-ready`) only
  * once their GSAP start states are applied. If JS never runs, the fail-safe
  * animation reveals them after 3s; <noscript> in the layout reveals instantly.
+ *
+ * On a first visit the opaque preloader already covers the page, so page
+ * heroes paint normally underneath it (keeps LCP at first paint instead of
+ * waiting for hydration); only the preloader's own artwork needs hiding.
  */
-[data-hero]:not(.hero-ready) {
+[data-preloader] [data-hero]:not(.hero-ready),
+html[data-intro="done"] [data-hero]:not(.hero-ready) {
   visibility: hidden;
   animation: hero-failsafe 0s linear 3s forwards;
 }
 @keyframes hero-failsafe {
   to { visibility: visible; }
+}
+/*
+ * Without a preloader (phones, return visits) the hero's large shapes — blobs,
+ * disc and the portrait (the LCP element) — paint in place from the first
+ * frame; only the type and small details run an entrance.
+ */
+[data-hero]:not(.hero-ready) [data-paint-early] {
+  visibility: visible;
 }
 
 :focus-visible {
@@ -200,8 +213,9 @@ html[data-intro="done"] [data-preloader] {
 .page-enter {
   animation: page-enter 0.9s var(--ease-out-expo) both;
 }
+/* Slide only: content painted at opacity 0 is never an LCP candidate. */
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(24px); }
+  from { transform: translateY(24px); }
   to { opacity: 1; transform: none; }
 }
 

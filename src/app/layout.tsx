@@ -9,14 +9,14 @@ import { jsonLd } from "@/lib/seo";
 import { introBootScript } from "@/lib/intro-boot";
 
 const nevera = localFont({
-  src: "../../public/assets/fonts/Nevera-Regular.otf",
+  src: "../../public/assets/fonts/Nevera-Regular.woff2",
   variable: "--font-nevera",
   weight: "400",
   display: "swap",
 });
 
 const haas = localFont({
-  src: "../../public/assets/fonts/neuehaasgrot.otf",
+  src: "../../public/assets/fonts/neuehaasgrot.woff2",
   variable: "--font-haas",
   display: "swap",
 });

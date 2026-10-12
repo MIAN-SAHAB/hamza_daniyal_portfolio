@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import { milestones } from "@/lib/site";
 
 /** Milestones on a horizontal rail inside a sticky viewport, scrubbed by a tall parent. */
 export default function Timeline() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const track = q("[data-track]")[0] as HTMLElement;

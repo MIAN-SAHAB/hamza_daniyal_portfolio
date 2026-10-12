@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useDeferredGSAP } from "@/lib/gsap";
 import { site } from "@/lib/site";
 
 const FIRST = "Mian Muhammad";
@@ -15,7 +15,7 @@ const LAST = "Hamza Daniyal";
 export default function Wordmark() {
   const root = useRef<HTMLDivElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const chars = q("[data-ch]") as HTMLElement[];

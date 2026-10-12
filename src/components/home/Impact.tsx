@@ -2,7 +2,7 @@
 
 import Link from "@/components/AppLink";
 import { useEffect, useRef, useState, type ComponentType } from "react";
-import { gsap, ScrollTrigger, SCRUB, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SCRUB, useDeferredGSAP, useGSAP } from "@/lib/gsap";
 import { metrics } from "@/lib/site";
 import { Bolt, BrowserWindow, Orbits, Sparkle } from "@/components/draw/art";
 
@@ -22,7 +22,7 @@ function ImpactConsole() {
   const m = metrics[active];
   const Icon = ICONS[active % ICONS.length];
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const ring = q("[data-ring-arc]")[0] as unknown as SVGCircleElement;
@@ -55,7 +55,14 @@ function ImpactConsole() {
   useGSAP(
     () => {
       const el = root.current!.querySelector<HTMLElement>("[data-number]")!;
-      const from = Number(el.dataset.current ?? 0);
+      // On mount the dial is off screen: set the value outright instead of rolling
+      // (a per-frame text rewrite forces a layout every frame during page load).
+      if (el.dataset.current === undefined) {
+        el.textContent = String(m.value).padStart(2, "0");
+        el.dataset.current = String(m.value);
+        return;
+      }
+      const from = Number(el.dataset.current);
       const obj = { v: from };
       gsap.to(obj, {
         v: m.value,
@@ -208,7 +215,7 @@ function ImpactConsole() {
 function KineticCta() {
   const ctaRef = useRef<HTMLElement>(null);
 
-  useGSAP(
+  useDeferredGSAP(
     () => {
       const q = gsap.utils.selector(ctaRef);
       const tl = gsap.timeline({
