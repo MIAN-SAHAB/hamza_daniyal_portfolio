@@ -7,6 +7,11 @@ import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
 import { jsonLd } from "@/lib/seo";
 import { introBootScript } from "@/lib/intro-boot";
+import GoogleTag from "@/components/GoogleTag";
+import { gtagBootScript } from "@/lib/gtag";
+
+// Only production builds report to Google Analytics (keeps `next dev` traffic out).
+const analytics = process.env.NODE_ENV === "production";
 
 const nevera = localFont({
   src: "../../public/assets/fonts/Nevera-Regular.woff2",
@@ -72,6 +77,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${nevera.variable} ${haas.variable} antialiased`} suppressHydrationWarning>
       <head>
+        {/* Google tag (gtag.js) — stub first in <head>; gtag.js itself is loaded late by <GoogleTag /> */}
+        {analytics && <script dangerouslySetInnerHTML={{ __html: gtagBootScript }} />}
         <script dangerouslySetInnerHTML={{ __html: introBootScript }} />
         <noscript>
           <style>{`[data-hero]{visibility:visible!important;animation:none!important}[data-preloader]{display:none!important}`}</style>
@@ -87,6 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <Footer />
         <div className="grain" aria-hidden />
+        {analytics && <GoogleTag />}
       </body>
     </html>
   );
