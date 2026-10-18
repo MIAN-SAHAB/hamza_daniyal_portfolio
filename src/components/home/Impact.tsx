@@ -51,29 +51,51 @@ function ImpactConsole() {
     { scope: root },
   );
 
-  // Roll the number whenever the active metric changes.
-  useGSAP(
+  // Counters play once: each metric rolls up from 0 the first time it's shown,
+  // revisits snap straight to the value. Nothing rolls until the dial is reached.
+  const seen = useRef(new Set<number>());
+  const entered = useRef(false);
+  const activeRef = useRef(active);
+  const tween = useRef<gsap.core.Tween | null>(null);
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
+
+  const roll = (i: number) => {
+    const el = root.current?.querySelector<HTMLElement>("[data-number]");
+    if (!el) return;
+    const value = metrics[i].value;
+    const pad = (n: number) => String(Math.round(n)).padStart(2, "0");
+    tween.current?.kill();
+    if (!entered.current || seen.current.has(i)) {
+      el.textContent = pad(value);
+      return;
+    }
+    seen.current.add(i);
+    const obj = { v: 0 };
+    tween.current = gsap.to(obj, { v: value, duration: 1.4, ease: "power3.out", onUpdate: () => void (el.textContent = pad(obj.v)) });
+  };
+
+  useDeferredGSAP(
     () => {
-      const el = root.current!.querySelector<HTMLElement>("[data-number]")!;
-      // On mount the dial is off screen: set the value outright instead of rolling
-      // (a per-frame text rewrite forces a layout every frame during page load).
-      if (el.dataset.current === undefined) {
-        el.textContent = String(m.value).padStart(2, "0");
-        el.dataset.current = String(m.value);
-        return;
-      }
-      const from = Number(el.dataset.current);
-      const obj = { v: from };
-      gsap.to(obj, {
-        v: m.value,
-        duration: 0.9,
-        ease: "expo.out",
-        onUpdate: () => {
-          el.textContent = String(Math.round(obj.v)).padStart(2, "0");
-          el.dataset.current = String(Math.round(obj.v));
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top 60%",
+        end: "max",
+        once: true,
+        onEnter: () => {
+          entered.current = true;
+          roll(activeRef.current);
         },
       });
-      gsap.fromTo("[data-swap]", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "expo.out", stagger: 0.05 });
+    },
+    { scope: root },
+  );
+
+  useGSAP(
+    () => {
+      roll(active);
+      if (entered.current) gsap.fromTo("[data-swap]", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "expo.out", stagger: 0.05 });
     },
     { scope: root, dependencies: [active] },
   );

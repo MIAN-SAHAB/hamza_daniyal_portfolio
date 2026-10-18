@@ -5,14 +5,15 @@ import ServicesList from "@/components/services/ServicesList";
 import Process from "@/components/services/Process";
 import Parallax from "@/components/motion/Parallax";
 import ScrubWords from "@/components/motion/ScrubWords";
-import { pageMetadata } from "@/lib/seo";
+import { allDeveloperKeywords, constructMetadata } from "@/lib/seo-config";
 import { BrowserWindow, CurvedArrow, Squiggle, WireCube } from "@/components/draw/art";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Services",
+export const metadata: Metadata = constructMetadata({
+  title: "Full-Stack Next.js, Headless Shopify, Three.js & Laravel Services | Hamza Daniyal",
   description:
-    "Creative web & 3D, full-stack Next.js and Laravel platforms, headless Shopify commerce and custom WordPress engineering — by senior full-stack developer Hamza Daniyal.",
+    "End-to-end web engineering for brands and studios: Custom Headless Shopify Storefront API builds, Three.js/R3F 3D product configurators, Next.js + Laravel platforms, and bespoke WordPress plugins.",
   path: "/services",
+  keywords: allDeveloperKeywords,
 });
 
 export default function ServicesPage() {
@@ -21,6 +22,7 @@ export default function ServicesPage() {
       <PageHero
         id="services-title"
         label="Services"
+        heading="Full-Stack Next.js, Headless Shopify, Three.js 3D & Laravel Development Services"
         lines={["Built to", "be felt,", "made to last"]}
         accentLine={1}
         tone="aqua"

@@ -8,69 +8,45 @@ import GamepadToy from "@/components/gaming/GamepadToy";
 import CtaBand from "@/components/CtaBand";
 import { getSteamData } from "@/lib/steam";
 import { genreBreakdown } from "@/lib/gaming";
-import { pageMetadata } from "@/lib/seo";
+import { constructMetadata, gamingKeywords } from "@/lib/seo-config";
+import { gamingGraph } from "@/lib/schema";
+import JsonLd from "@/components/seo/JsonLd";
+import PlayerFaq from "@/components/gaming/PlayerFaq";
+import { gamingFaqs } from "@/lib/gaming-faq";
 import { site } from "@/lib/site";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const steam = await getSteamData();
-  const main = steam.topGames[0];
-  const hours = main ? `${main.hours.toLocaleString("en-US")}+ hours in ${main.name}` : "Counter-Strike 2";
-  return {
-    ...pageMetadata({
-      title: "Gaming",
-      description: `Hamza Daniyal's gaming profile — ${hours}, ${steam.library.length} games played on Steam. Senior full-stack developer from Pakistan who streams on Twitch and squads up on Discord.`,
-      path: "/gaming",
-    }),
-    keywords: [
-      "Hamza Daniyal gaming",
-      "Counter-Strike 2 player Pakistan",
-      "developer who games",
-      "Steam profile",
-      "Twitch streamer Pakistan",
-      ...steam.topGames.slice(0, 5).map((g) => g.name),
-    ],
-  };
-}
+export const metadata: Metadata = constructMetadata({
+  title: "Tommy Vercetti (Hamza Daniyal) — CS2 Competitive Player, Raptors Esports & Twitch Stream",
+  description:
+    "Off the clock with Hamza Daniyal (Tommy Vercetti). Counter-Strike 2 (CS2) competitive player with Raptors Esports, live Steam stats and game library, Twitch streams (tommyvercetti__455) and where to squad up.",
+  path: "/gaming",
+  type: "profile",
+  keywords: gamingKeywords,
+});
 
 export default async function GamingPage() {
   const steam = await getSteamData();
   const genres = genreBreakdown(steam.library);
   const main = steam.topGames[0];
+  const faqs = gamingFaqs(steam, genres);
   const discord = site.socials.find((s) => s.label === "Discord")!;
-  const gamingProfiles = site.socials.filter((s) => ["Steam", "Twitch", "Discord"].includes(s.label)).map((s) => s.href);
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    url: `${site.url}/gaming`,
-    name: `${site.shortName} — Gaming profile`,
-    mainEntity: {
-      "@type": "Person",
-      "@id": `${site.url}/#person`,
-      name: site.name,
-      alternateName: steam.persona,
-      sameAs: gamingProfiles,
-      knowsAbout: [...genres.map((g) => g.label), ...steam.topGames.slice(0, 6).map((g) => g.name)],
-      ...(main
-        ? {
-            interactionStatistic: {
-              "@type": "InteractionCounter",
-              interactionType: "https://schema.org/PlayAction",
-              name: `Hours played in ${main.name}`,
-              userInteractionCount: Math.round(main.hours),
-            },
-          }
-        : {}),
-    },
-  };
-
   return (
     <main id="main">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <JsonLd
+        id="ld-gaming"
+        data={gamingGraph({
+          persona: steam.persona,
+          avatar: steam.avatar,
+          mainGame: main,
+          games: [...genres.map((g) => g.label), ...steam.topGames.slice(0, 6).map((g) => g.name)],
+          faqs,
+        })}
+      />
       <GamingHero steam={steam} genres={genres} />
-      {main && <MainGame game={main} />}
+      {main && <MainGame game={main} totalHours={steam.totalHours} memberYear={steam.memberYear} gamesPlayed={steam.library.length} />}
       <GameShelf steam={steam} />
       <GameLibrary games={steam.library} />
+      <PlayerFaq faqs={faqs} />
       <SquadUp />
       <CtaBand
         id="gaming-cta"

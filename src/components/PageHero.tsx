@@ -10,7 +10,12 @@ type Tone = "violet" | "aqua" | "lime";
 type Props = {
   id: string;
   label: string;
-  /** Each entry renders as its own masked line. */
+  /**
+   * Keyword-rich continuation of the semantic <h1>. The <h1> is the small label
+   * pill; this text is appended visually hidden so the layout never changes.
+   */
+  heading?: string;
+  /** Each entry renders as its own masked line (decorative display type, not a heading). */
   lines: string[];
   /** Index of the line set in gradient type. */
   accentLine?: number;
@@ -28,7 +33,7 @@ const STAGE: Record<Tone, string> = {
 };
 
 /** Inner-page hero: title on the left, a self-drawing illustration on a colour stage at right. */
-export default function PageHero({ id, label, lines, accentLine = 1, intro, aside, art, tone = "violet" }: Props) {
+export default function PageHero({ id, label, heading, lines, accentLine = 1, intro, aside, art, tone = "violet" }: Props) {
   const root = useRef<HTMLElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
   const introDone = useIntroDone();
@@ -51,7 +56,7 @@ export default function PageHero({ id, label, lines, accentLine = 1, intro, asid
           scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: SCRUB },
         })
         .to(q("[data-stage-wrap]"), { yPercent: -16, rotate: 8 }, 0)
-        .to(q("h1"), { yPercent: -10 }, 0);
+        .to(q("[data-display]"), { yPercent: -10 }, 0);
     },
     { scope: root },
   );
@@ -75,11 +80,14 @@ export default function PageHero({ id, label, lines, accentLine = 1, intro, asid
       <div className="relative grid items-center gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
           <div data-fade className="mb-8 flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-ink px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-white">{label}</span>
+            <h1 id={id} className="rounded-full bg-ink px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-white">
+              {label}
+              {heading && <span className="sr-only"> — {heading}</span>}
+            </h1>
             {aside}
           </div>
 
-          <h1 id={id} className="font-display text-[clamp(2.75rem,7vw,8rem)] uppercase leading-[0.88] text-ink">
+          <p data-display className="font-display text-[clamp(2.75rem,7vw,8rem)] uppercase leading-[0.88] text-ink">
             {lines.map((l, i) => (
               <span key={l} className={`block overflow-hidden pb-[0.06em] ${i % 2 ? "md:pl-[6vw]" : ""}`}>
                 <span data-line className={`block will-change-transform ${i === accentLine ? "text-gradient" : ""}`}>
@@ -87,7 +95,7 @@ export default function PageHero({ id, label, lines, accentLine = 1, intro, asid
                 </span>
               </span>
             ))}
-          </h1>
+          </p>
           <Squiggle mode="intro" delay={0.9} duration={1.6} strokeWidth={5} className="mt-2 w-[min(80%,34rem)] text-accent" />
         </div>
 

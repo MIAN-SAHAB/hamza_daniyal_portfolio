@@ -79,7 +79,7 @@ export default function GamingHero({ steam, genres }: { steam: SteamData; genres
           scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: SCRUB },
         })
         .to(q("[data-stage-wrap]"), { yPercent: -14 }, 0)
-        .to(q("h1"), { yPercent: -10 }, 0);
+        .to(q("[data-display]"), { yPercent: -10 }, 0);
 
       // Pointer depth: floating covers drift at different rates.
       if (!window.matchMedia("(pointer: fine)").matches) return;
@@ -125,24 +125,30 @@ export default function GamingHero({ steam, genres }: { steam: SteamData; genres
       <div className="relative grid gap-14 lg:grid-cols-12 lg:gap-10">
         {/* ---------- copy column ---------- */}
         <div className="lg:col-span-7">
-          <p data-fade className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-lime px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-ink">Gaming</span>
+          <div data-fade className="mb-6 flex flex-wrap items-center gap-2">
+            <h1 id="gaming-title" className="rounded-full bg-lime px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-ink">
+              Gaming
+              <span className="sr-only">
+                {" "}
+                — Tommy Vercetti (tommyvercetti__455 / IamTommyVercetti): Counter-Strike 2 (CS2) competitive FPS player &amp; Twitch streamer
+              </span>
+            </h1>
             <span className="rounded-full border border-white/20 px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-white/70">
               Player profile
             </span>
             <span className="rounded-full border border-white/20 px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-white/70">
               Steam since {steam.memberYear}
             </span>
-          </p>
+          </div>
 
-          <h1 id="gaming-title" className="font-display text-[clamp(2.6rem,6.6vw,7.25rem)] uppercase leading-[0.88]">
+          <p data-display className="font-display text-[clamp(2.6rem,6.6vw,7.25rem)] uppercase leading-[0.88]">
             <span className="block overflow-hidden pb-[0.06em]">
               <span data-line className="block">Off the clock,</span>
             </span>
             <span className="block overflow-hidden pb-[0.06em] md:pl-[5vw]">
               <span data-line className="text-gradient block">on the server.</span>
             </span>
-          </h1>
+          </p>
           <Squiggle mode="intro" delay={0.9} duration={1.6} strokeWidth={5} className="mt-1 w-[min(80%,28rem)] text-lime" />
 
           {/* SEO-rich intro, written from live Steam numbers */}
@@ -156,7 +162,7 @@ export default function GamingHero({ steam, genres }: { steam: SteamData; genres
             {topGenres.length
               ? `Mostly ${topGenres.join(", ")} — the same instincts I bring to code: timing, precision and reading the room. `
               : ""}
-            Catch me streaming on Twitch or squad up on Discord.
+            In game I&rsquo;m Tommy Vercetti — catch me streaming on Twitch as tommyvercetti__455 or squad up on Discord.
           </p>
 
           {/* live stats */}

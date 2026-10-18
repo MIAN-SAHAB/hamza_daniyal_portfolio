@@ -4,7 +4,7 @@
  */
 
 export const site = {
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://hamzadaniyal.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.hamzadaniyal.com",
   name: "Mian Muhammad Hamza Daniyal",
   shortName: "Hamza Daniyal",
   role: "Senior Full-Stack Developer & Creative Technologist",
@@ -102,16 +102,16 @@ export const projects: Project[] = [
     accent: "accent",
   },
   {
-    slug: "beba-yerba",
+    slug: "headless-commerce",
     index: "02",
-    title: "Beba Yerba",
+    title: "Headless Commerce Architecture",
     kicker: "Headless Commerce",
     summary:
-      "A custom headless storefront on the Shopify Storefront API with an API-driven store locator and conversion-tuned UI — product storytelling that sells without slowing down.",
-    role: "Headless architecture, Storefront API integration, store locator, CRO UI",
-    stack: ["Shopify Storefront API", "Next.js", "Tailwind CSS", "Maps API"],
-    image: unsplash("photo-1556679343-c7306c1976bc"),
-    imageAlt: "Iced yerba mate drink with lime on a dark surface",
+      "A custom headless storefront built on the Shopify Storefront API with an API-driven store locator and conversion-tuned UI — high-velocity product storytelling engineered without theme bottlenecks.",
+    role: "Headless architecture, Storefront API integration, custom API store locator, CRO UI",
+    stack: ["Shopify Storefront API", "Next.js", "TypeScript", "Tailwind CSS", "Maps API"],
+    image: images.product,
+    imageAlt: "Headphones product shot on a plain studio backdrop, representing a headless storefront catalogue",
     accent: "aqua",
   },
   {
@@ -226,6 +226,7 @@ export const metrics = [
 export const services = [
   {
     index: "01",
+    slug: "threejs-webgl-3d-configurators",
     title: "Creative Web & 3D",
     summary:
       "Award-calibre marketing sites and immersive WebGL — scroll-scrubbed narratives, real-time product configurators and shader-driven brand moments.",
@@ -235,6 +236,7 @@ export const services = [
   },
   {
     index: "02",
+    slug: "nextjs-laravel-full-stack-development",
     title: "Full-Stack Next.js & Laravel",
     summary:
       "Production platforms engineered end to end — typed Next.js front ends, Laravel services, MySQL schemas and the CI discipline to keep them fast.",
@@ -244,6 +246,7 @@ export const services = [
   },
   {
     index: "03",
+    slug: "headless-shopify-development",
     title: "Headless Commerce",
     summary:
       "Shopify Storefront API builds that outrun themes — bespoke PDPs, API-driven store locators and conversion UI tuned against real behaviour.",
@@ -253,6 +256,7 @@ export const services = [
   },
   {
     index: "04",
+    slug: "wordpress-plugin-engineering",
     title: "WordPress & Plugin Engineering",
     summary:
       "Custom WordPress done properly — bespoke themes, plugins with real architecture, and headless setups when the editor experience matters.",

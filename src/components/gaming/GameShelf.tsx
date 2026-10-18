@@ -2,7 +2,7 @@
 
 import GameArt from "./GameArt";
 import { useRef } from "react";
-import { gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
+import { countUpOnce, gsap, SCRUB, useDeferredGSAP } from "@/lib/gsap";
 import type { SteamData, SteamGame } from "@/lib/steam";
 import { Joystick, Trophy } from "@/components/draw/art";
 
@@ -56,7 +56,7 @@ function Shelf({ title, games, kind }: { title: string; games: SteamGame[]; kind
   );
 }
 
-/** Game library: staggered, tilted capsules with playtime bars that fill on scroll. */
+/** Game library: staggered, tilted capsules with playtime bars that fill on scroll; stats count up once. */
 export default function GameShelf({ steam }: { steam: SteamData }) {
   const root = useRef<HTMLElement>(null);
 
@@ -76,16 +76,7 @@ export default function GameShelf({ steam }: { steam: SteamData }) {
           { width: `${bar.dataset.width}%`, ease: "none", scrollTrigger: { trigger: el, start: "top 85%", end: "top 45%", scrub: SCRUB } },
         );
       });
-      q("[data-stat]").forEach((el) => {
-        const target = Number(el.dataset.stat);
-        const obj = { v: 0 };
-        gsap.to(obj, {
-          v: target,
-          ease: "none",
-          scrollTrigger: { trigger: el, start: "top 95%", end: "top 55%", scrub: SCRUB },
-          onUpdate: () => void (el.textContent = Math.round(obj.v).toLocaleString("en-US")),
-        });
-      });
+      q("[data-stat]").forEach((el) => countUpOnce(el, Number(el.dataset.stat), { start: "top 90%" }));
     },
     { scope: root },
   );

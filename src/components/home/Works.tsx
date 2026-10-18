@@ -161,7 +161,7 @@ export default function Works() {
                   data-title
                   className={`relative z-10 font-display text-huge uppercase text-ink md:absolute ${L.title}`}
                 >
-                  {p.title}
+                  <Link href={`/work/${p.slug}`}>{p.title}</Link>
                 </h3>
 
                 <div className={`relative z-10 max-w-sm md:absolute md:max-w-[22vw] ${L.copy}`}>

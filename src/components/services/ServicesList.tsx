@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "@/components/AppLink";
 import { useRef, useState } from "react";
 import { gsap, SCRUB, useGSAP } from "@/lib/gsap";
 import { services } from "@/lib/site";
@@ -140,7 +141,19 @@ export default function ServicesList() {
                         </li>
                       ))}
                     </ul>
-                    <p className="text-micro uppercase leading-loose tracking-[0.18em] md:col-span-3">{s.stack.join(" / ")}</p>
+                    <div className="md:col-span-3">
+                      <p className="text-micro uppercase leading-loose tracking-[0.18em]">{s.stack.join(" / ")}</p>
+                      <Link
+                        href={`/services/${s.slug}`}
+                        tabIndex={open ? undefined : -1}
+                        className="group/link mt-6 inline-flex items-center gap-3 text-sm uppercase tracking-[0.14em] text-ink"
+                      >
+                        <span className="link-underline">Explore {s.title}</span>
+                        <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-lime transition-transform duration-500 ease-expo group-hover/link:translate-x-1">
+                          →
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

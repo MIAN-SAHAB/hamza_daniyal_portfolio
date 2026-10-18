@@ -3,14 +3,22 @@ import PageHero from "@/components/PageHero";
 import ProjectsList from "@/components/work/ProjectsList";
 import CtaBand from "@/components/CtaBand";
 import { BrowserWindow } from "@/components/draw/art";
-import { pageMetadata } from "@/lib/seo";
+import { constructMetadata, developerKeywords } from "@/lib/seo-config";
 import { projects } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Work",
+export const metadata: Metadata = constructMetadata({
+  title: "Case Studies: Next.js Platforms, 3D WebGL, Laravel & Headless Commerce | Hamza Daniyal",
   description:
-    "Selected work by Hamza Daniyal — TouchPoint, Beba Yerba headless commerce, real-time 3D product configurators, Haprow and GoPhygital.",
+    "Explore production platforms engineered from scratch: TouchPoint (Next.js/GSAP), Real-Time 3D WebGL Configurators, Haprow (Laravel & Core Web Vitals), GoPhygital, and Headless Shopify Storefronts.",
   path: "/work",
+  keywords: [
+    ...developerKeywords.core,
+    "Next.js case studies",
+    "Three.js 3D configurator case study",
+    "Headless Shopify case study",
+    "Laravel case study",
+    ...projects.map((p) => p.title),
+  ],
 });
 
 export default function WorkPage() {
@@ -19,6 +27,7 @@ export default function WorkPage() {
       <PageHero
         id="work-title"
         label="Work"
+        heading="Case Studies: Next.js Platforms, Real-Time 3D WebGL Configurators, Laravel & Headless Shopify Commerce"
         lines={["Things I've", "shipped", "& obsessed over"]}
         accentLine={1}
         tone="aqua"

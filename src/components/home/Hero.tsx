@@ -97,10 +97,12 @@ export default function Hero() {
 
       {/* meta row */}
       <div data-fade className="relative z-30 flex items-start justify-between gap-6 text-micro uppercase tracking-[0.2em] text-graphite md:absolute md:inset-x-10 md:top-28">
-        <p className="leading-relaxed">
+        <h1 id="hero-title" className="leading-relaxed">
+          <span className="sr-only">{site.name} — </span>
           Senior Full-Stack Developer
           <br />& Creative Technologist
-        </p>
+          <span className="sr-only"> — Next.js, Headless Shopify &amp; 3D WebGL Developer</span>
+        </h1>
         <p className="hidden text-right leading-relaxed sm:block">
           Based in {site.location}
           <br />
@@ -109,17 +111,14 @@ export default function Hero() {
       </div>
 
       {/* the name — sits BEHIND the figure */}
-      <h1 id="hero-title" className="relative z-10 mt-8 text-ink md:absolute md:inset-x-10 md:top-[24%] md:mt-0">
-        <span className="sr-only">
-          {site.name} — {site.role}
-        </span>
-        <span aria-hidden data-line="1" className={`block ${nameClasses}`}>
+      <p aria-hidden className="relative z-10 mt-8 text-ink md:absolute md:inset-x-10 md:top-[24%] md:mt-0">
+        <span data-line="1" className={`block ${nameClasses}`}>
           {chars("Hamza")}
         </span>
-        <span aria-hidden data-line="2" className={`block md:pl-[9vw] ${nameClasses}`}>
+        <span data-line="2" className={`block md:pl-[9vw] ${nameClasses}`}>
           {chars("Daniyal")}
         </span>
-      </h1>
+      </p>
 
       {/* the figure */}
       <div

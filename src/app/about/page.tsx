@@ -6,14 +6,22 @@ import Timeline from "@/components/about/Timeline";
 import Parallax from "@/components/motion/Parallax";
 import ScrubWords from "@/components/motion/ScrubWords";
 import { Bolt, CurvedArrow, Meander, PaperPlane, Signature, Sparkle } from "@/components/draw/art";
-import { pageMetadata } from "@/lib/seo";
+import { constructMetadata, developerKeywords } from "@/lib/seo-config";
 import { principles, site } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
-  title: "About",
+export const metadata: Metadata = constructMetadata({
+  title: "About Hamza Daniyal — Hire a Senior Full-Stack Developer & Creative Technologist",
   description:
-    "Hamza Daniyal's journey since 2018 — from custom WordPress and PHP to Laravel, Next.js, headless commerce and real-time WebGL. Engineering philosophy and milestones.",
+    "Meet Mian Muhammad Hamza Daniyal: senior full-stack developer & creative technologist shipping since 2018 — Next.js, Laravel, headless Shopify and real-time WebGL. Remote-first, working with teams worldwide.",
   path: "/about",
+  type: "profile",
+  keywords: [
+    ...developerKeywords.core,
+    "Hire Senior Full-Stack Developer",
+    "Hire Creative Technologist",
+    "Remote Next.js Developer",
+    "Laravel & PHP Systems Architect",
+  ],
 });
 
 const FACTS = [
@@ -29,6 +37,7 @@ export default function AboutPage() {
       <PageHero
         id="about-title"
         label="About"
+        heading="Hamza Daniyal, Senior Full-Stack Developer & Creative Technologist"
         lines={["Code with", "a point", "of view"]}
         accentLine={1}
         tone="violet"

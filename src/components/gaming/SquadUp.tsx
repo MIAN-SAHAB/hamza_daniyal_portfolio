@@ -16,6 +16,7 @@ export default function SquadUp() {
       <p className="inline-block rounded-full bg-lime px-3 py-1.5 text-micro uppercase tracking-[0.2em] text-ink">Squad up</p>
       <h2 id="squad-title" className="mt-6 font-display text-[clamp(2.5rem,6vw,6rem)] uppercase leading-[0.9] text-ink">
         Find me <span className="text-gradient">in the lobby</span>
+        <span className="sr-only"> — Tommy Vercetti on Twitch (tommyvercetti__455), Steam (IamTommyVercetti) &amp; Discord</span>
       </h2>
 
       <ul className="relative mt-16 border-t border-ink/15">

@@ -3,15 +3,22 @@ import PageHero from "@/components/PageHero";
 import ContactForm from "@/components/contact/ContactForm";
 import CopyEmail, { PhoneLink } from "@/components/CopyEmail";
 import Parallax from "@/components/motion/Parallax";
-import { pageMetadata } from "@/lib/seo";
+import { constructMetadata, developerKeywords } from "@/lib/seo-config";
 import { Envelope, PaperPlane } from "@/components/draw/art";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Contact",
+export const metadata: Metadata = constructMetadata({
+  title: "Contact — Hire a Senior Full-Stack Developer for Remote Projects | Hamza Daniyal",
   description:
-    "Start a project with Hamza Daniyal — senior full-stack developer & creative technologist based in Pakistan, working worldwide. Creative web, WebGL, Next.js, Laravel and headless commerce.",
+    "Start a project with Hamza Daniyal — senior full-stack developer & creative technologist, remote-first and working with clients worldwide. Next.js, headless Shopify, Three.js 3D and Laravel. Replies within one working day.",
   path: "/contact",
+  keywords: [
+    ...developerKeywords.core,
+    "Hire Senior Full-Stack Developer",
+    "Hire Next.js Developer remote",
+    "Freelance Creative Technologist",
+    "Remote web developer for hire",
+  ],
 });
 
 export default function ContactPage() {
@@ -20,6 +27,7 @@ export default function ContactPage() {
       <PageHero
         id="contact-title"
         label="Contact"
+        heading="Hire a Senior Full-Stack Developer & Creative Technologist for Remote Projects Worldwide"
         lines={["Let's make", "it happen"]}
         accentLine={1}
         tone="lime"

@@ -9,7 +9,7 @@ import { Bolt, BrowserWindow, Cart, Orbits, WireCube } from "@/components/draw/a
 
 const ICONS: Record<string, ComponentType<{ className?: string; strokeWidth?: number; start?: string; end?: string }>> = {
   touchpoint: BrowserWindow,
-  "beba-yerba": Cart,
+  "headless-commerce": Cart,
   "3d-configurators": WireCube,
   haprow: Bolt,
   gophygital: Orbits,
@@ -135,7 +135,7 @@ export default function ProjectsList() {
                       <span className="text-accent">{p.kicker}</span>
                     </p>
                     <h3 id={`${p.slug}-h`} data-reveal className="mt-5 font-display text-[clamp(2.5rem,5vw,5rem)] uppercase leading-[0.9] text-ink">
-                      {p.title}
+                      <Link href={`/work/${p.slug}`}>{p.title}</Link>
                     </h3>
                     <p data-reveal className="mt-5 text-lede">
                       {p.summary}
@@ -151,16 +151,20 @@ export default function ProjectsList() {
                         </li>
                       ))}
                     </ul>
-                    <Link
-                      data-reveal
-                      href="/contact"
-                      className="group mt-8 inline-flex items-center gap-3 text-sm uppercase tracking-[0.14em] text-ink"
-                    >
-                      <span className="link-underline">Build something like this</span>
-                      <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-lime transition-transform duration-500 ease-expo group-hover:translate-x-1">
-                        →
-                      </span>
-                    </Link>
+                    <div data-reveal className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+                      <Link
+                        href={`/work/${p.slug}`}
+                        className="group inline-flex items-center gap-3 text-sm uppercase tracking-[0.14em] text-ink"
+                      >
+                        <span className="link-underline">Read the case study</span>
+                        <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-lime transition-transform duration-500 ease-expo group-hover:translate-x-1">
+                          →
+                        </span>
+                      </Link>
+                      <Link href="/contact" className="link-underline text-sm uppercase tracking-[0.14em] text-graphite hover:text-ink">
+                        Build something like this
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>

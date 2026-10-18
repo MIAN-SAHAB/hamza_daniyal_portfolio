@@ -50,4 +50,30 @@ export function useDeferredGSAP(callback: ContextFunc, config?: { scope?: React.
   return useGSAP((context, contextSafe) => afterPaint(contextSafe!(() => callback(context, contextSafe))), config);
 }
 
+const thousands = (n: number) => Math.round(n).toLocaleString("en-US");
+
+/**
+ * House rule for counters: they roll up on their own the first time they scroll
+ * into view, then stay put — never scrubbed, never replayed on later scrolls.
+ * Call inside a (deferred) GSAP context so the trigger reverts with it.
+ */
+export function countUpOnce(
+  el: HTMLElement,
+  to: number,
+  { format = thousands, duration = 2, start = "top 85%", onDone }: { format?: (n: number) => string; duration?: number; start?: string; onDone?: () => void } = {},
+) {
+  const obj = { v: 0 };
+  let started = false;
+  el.textContent = format(0);
+  const run = () => {
+    if (started) return;
+    started = true;
+    gsap.to(obj, { v: to, duration, ease: "power3.out", onUpdate: () => void (el.textContent = format(obj.v)), onComplete: onDone });
+  };
+  const st = ScrollTrigger.create({ trigger: el, start, end: "max", once: true, onEnter: run });
+  // Already scrolled past on load (deep link, restored scroll) — still let it run.
+  if (st.progress > 0) run();
+  return st;
+}
+
 export { gsap, ScrollTrigger, SplitText, useGSAP };

@@ -5,7 +5,9 @@ import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
-import { jsonLd } from "@/lib/seo";
+import { allDeveloperKeywords, BASE_URL } from "@/lib/seo-config";
+import { globalGraph } from "@/lib/schema";
+import JsonLd from "@/components/seo/JsonLd";
 import { introBootScript } from "@/lib/intro-boot";
 import GoogleTag from "@/components/GoogleTag";
 import { gtagBootScript } from "@/lib/gtag";
@@ -27,7 +29,7 @@ const haas = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: `${site.name} — ${site.role}`,
     template: `%s — ${site.shortName}`,
@@ -36,23 +38,10 @@ export const metadata: Metadata = {
   applicationName: site.shortName,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
-  keywords: [
-    "Hamza Daniyal",
-    "Senior Full-Stack Developer",
-    "Creative Technologist",
-    "Next.js developer",
-    "Three.js",
-    "React Three Fiber",
-    "GSAP",
-    "Laravel",
-    "Headless Shopify",
-    "WordPress plugin development",
-    "Pakistan",
-  ],
-  alternates: { canonical: "/" },
+  keywords: allDeveloperKeywords,
+  // No site-wide canonical: every route sets its own via constructMetadata().
   openGraph: {
     type: "profile",
-    url: "/",
     siteName: site.name,
     title: `${site.name} — ${site.role}`,
     description: site.tagline,
@@ -65,7 +54,11 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.role}`,
     description: site.tagline,
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 },
+  },
 };
 
 export const viewport: Viewport = {
@@ -83,10 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`[data-hero]{visibility:visible!important;animation:none!important}[data-preloader]{display:none!important}`}</style>
         </noscript>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-        />
+        <JsonLd id="ld-global" data={globalGraph()} />
       </head>
       <body className="min-h-svh">
         <Preloader />
